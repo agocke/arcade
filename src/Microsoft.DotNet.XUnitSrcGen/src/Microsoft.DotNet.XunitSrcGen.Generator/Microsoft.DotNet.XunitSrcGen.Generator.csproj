@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <PackageReference Include="xunit.extensibility.core" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="xunit.extensibility.execution" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="xunit.runner.utility" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="xunit.abstractions" GeneratePathProperty="true" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="GetDependencyTargetPaths">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGxunit_abstractions)\lib\netstandard2.0\xunit.abstractions.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGxunit_extensibility_core)\lib\netstandard1.1\xunit.core.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGxunit_extensibility_execution)\lib\netstandard1.1\xunit.execution.dotnet.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGxunit_runner_utility)\lib\netstandard1.5\xunit.runner.utility.netstandard15.dll" IncludeRuntimeDependency="false" />
+    </ItemGroup>
+  </Target>
+</Project>

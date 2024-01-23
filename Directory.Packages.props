@@ -1,12 +1,10 @@
 <Project>
-
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <!-- Arcade uses mutliple feeds, so we need to supress this warning. -->
     <NoWarn>$(NoWarn);NU1507</NoWarn>
   </PropertyGroup>
-
   <!-- Version properties used outside of PackageReference items -->
   <PropertyGroup>
     <MicrosoftCciVersion>4.0.0-rc3-24214-00</MicrosoftCciVersion>
@@ -19,7 +17,6 @@
     <XUnitAnalyzersVersion>1.10.0</XUnitAnalyzersVersion>
     <XUnitRunnerVisualStudioVersion>2.5.6</XUnitRunnerVisualStudioVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <!-- arcade -->
     <PackageVersion Include="Microsoft.DotNet.SwaggerGenerator.MSBuild" Version="$(MicrosoftDotNetSwaggerGeneratorMSBuildVersion)" />
@@ -46,6 +43,8 @@
     <PackageVersion Include="NuGet.Versioning" Version="$(NuGetVersioningVersion)" />
     <!-- roslyn -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisCSharpVersion)" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(MicrosoftCodeAnalysisCSharpVersion)" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" Version="1.1.2-beta1.24062.1" />
     <!-- runtime -->
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="$(MicrosoftBclAsyncInterfacesVersion)" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftExtensionsDependencyInjectionAbstractionsVersion)" />
@@ -63,8 +62,9 @@
     <PackageVersion Include="System.Text.Json" Version="$(SystemTextJsonVersion)" />
     <!-- sdk -->
     <PackageVersion Include="Microsoft.NET.Sdk.WorkloadManifestReader" Version="$(MicrosoftNetSdkWorkloadManifestReaderVersion)" />
+    <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+    <PackageVersion Include="xunit.runner.utility" Version="2.6.6" />
   </ItemGroup>
-
   <!-- external -->
   <ItemGroup>
     <PackageVersion Include="Azure.Core" Version="1.36.0" />
@@ -97,5 +97,4 @@
     <PackageVersion Include="xunit.runner.reporters" Version="$(XUnitVersion)" />
     <PackageVersion Include="nsubstitute" Version="5.1.0" />
   </ItemGroup>
-
 </Project>

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <FlagNetStandard1xDependencies>false</FlagNetStandard1xDependencies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Microsoft.DotNet.XunitSrcGen.Generator/Microsoft.DotNet.XunitSrcGen.Generator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+    <PackageReference Include="xunit.runner.utility" GeneratePathProperty="true" />
+
+  </ItemGroup>
+
+  <!-- Workaround for https://github.com/xunit/xunit/issues/1905 -->
+  <ItemGroup>
+    <Reference Include="xunit.runner.utility.netstandard">
+      <HintPath>$(Pkgxunit_runner_utility)\lib\netstandard1.5\xunit.runner.utility.netstandard15.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

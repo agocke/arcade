@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SampleProject.Tests\SampleProject.Tests.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.DotNet.XunitSrcGen.Execution\Microsoft.DotNet.XunitSrcGen.Execution.csproj" />
+  </ItemGroup>
+
+</Project>
