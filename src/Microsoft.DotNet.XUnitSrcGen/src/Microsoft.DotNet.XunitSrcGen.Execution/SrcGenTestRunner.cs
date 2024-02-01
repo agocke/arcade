@@ -22,6 +22,11 @@ public class SrcGenTestRunner : XunitTestFramework
     private SrcGenTestRunner(IMessageSink messageSink)
     : base(messageSink) { }
 
+    public SrcGenTestRunner()
+    : this(new ConsoleDiagnosticMessageSink())
+    { }
+
+
     public static int Run(string[] args)
     {
         var asm = typeof(SrcGenTestRunner).Assembly;
@@ -158,10 +163,10 @@ public class SrcGenTestRunner : XunitTestFramework
             filters.ExcludedTraits.Add(kvp.Key, kvp.Value);
         }
 
-        return ExecuteTests(Array.Empty<ITestCase>());
+        return xunitTestFx.ExecuteTests(Array.Empty<ITestCase>());
     }
 
-    public static int ExecuteTests(ITestCase[] rawTestCases)
+    public int ExecuteTests(ITestCase[] rawTestCases)
     {
         var filters = new XunitFilters();
         var asm = typeof(SrcGenTestRunner).Assembly;
@@ -195,7 +200,7 @@ public class SrcGenTestRunner : XunitTestFramework
         };
 
         var xunitTestFx = new SrcGenTestRunner(diagnosticSink);
-        var executor = xunitTestFx.CreateExecutor(asmName);
+        var executor = new Microsoft.DotNet.XunitSrcGen.XunitTestFrameworkExecutor(asmName, base.SourceInformationProvider, base.DiagnosticMessageSink); // xunitTestFx.CreateExecutor(asmName);
         var testCases = rawTestCases;
         var filteredTestCases = testCases.Where(filters.Filter).ToList();
         executor.RunTests(filteredTestCases, resultsSink, TestFrameworkOptions.ForExecution(assemblyConfig));

@@ -28,7 +28,8 @@ public sealed class FactTests
                 )
             )
         };
-        SrcGenTestRunner.ExecuteTests(testCases);
+        var xunitTestFx = new SrcGenTestRunner();
+        xunitTestFx.ExecuteTests(testCases);
     }
 }
 
