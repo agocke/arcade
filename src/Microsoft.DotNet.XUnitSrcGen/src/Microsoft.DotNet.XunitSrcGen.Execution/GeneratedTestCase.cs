@@ -89,7 +89,7 @@ public sealed class GeneratedTestAssembly : ITestAssembly
     public void Serialize(IXunitSerializationInfo info) => throw new NotImplementedException();
 }
 
-public sealed class GeneratedMethodInfo(MethodInfo methodInfo) : IMethodInfo, IReflectionMethodInfo
+public sealed class GeneratedMethodInfo(MethodInfo methodInfo) : IMethodInfo
 {
     public bool IsAbstract => throw new NotImplementedException();
 
@@ -113,7 +113,7 @@ public sealed class GeneratedMethodInfo(MethodInfo methodInfo) : IMethodInfo, IR
     public IMethodInfo MakeGenericMethod(params ITypeInfo[] typeArguments) => throw new NotImplementedException();
 }
 
-public sealed class GeneratedTypeInfo(Type type) : ITypeInfo, IReflectionTypeInfo
+public sealed class GeneratedTypeInfo(Type type) : ITypeInfo
 {
     public IAssemblyInfo Assembly => throw new NotImplementedException();
 
@@ -132,8 +132,6 @@ public sealed class GeneratedTypeInfo(Type type) : ITypeInfo, IReflectionTypeInf
     public bool IsValueType => throw new NotImplementedException();
 
     public string Name => type.Name;
-
-    public Type Type => type;
 
     public IEnumerable<IAttributeInfo> GetCustomAttributes(string assemblyQualifiedAttributeTypeName)
         => type.GetCustomAttributesData()
