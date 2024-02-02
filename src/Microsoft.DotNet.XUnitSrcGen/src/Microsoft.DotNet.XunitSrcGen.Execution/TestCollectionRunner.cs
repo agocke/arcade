@@ -131,7 +131,7 @@ namespace Microsoft.DotNet.XunitSrcGen
 
             foreach (var testCasesByClass in TestCases.GroupBy(tc => tc.TestMethod.TestClass, TestClassComparer.Instance))
             {
-                summary.Aggregate(await RunTestClassAsync(testCasesByClass.Key, (IReflectionTypeInfo)testCasesByClass.Key.Class, testCasesByClass));
+                summary.Aggregate(await RunTestClassAsync(testCasesByClass.Key, testCasesByClass.Key.Class, testCasesByClass));
                 if (CancellationTokenSource.IsCancellationRequested)
                     break;
             }
@@ -146,6 +146,6 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// <param name="class">The CLR class that contains the tests to be run.</param>
         /// <param name="testCases">The test cases to be run.</param>
         /// <returns>Returns summary information about the tests that were run.</returns>
-        protected abstract Task<RunSummary> RunTestClassAsync(ITestClass testClass, IReflectionTypeInfo @class, IEnumerable<TTestCase> testCases);
+        protected abstract Task<RunSummary> RunTestClassAsync(ITestClass testClass, IGeneratedTypeInfo @class, IEnumerable<TTestCase> testCases);
     }
 }

@@ -113,7 +113,7 @@ public sealed class GeneratedMethodInfo(MethodInfo methodInfo) : IMethodInfo
     public IMethodInfo MakeGenericMethod(params ITypeInfo[] typeArguments) => throw new NotImplementedException();
 }
 
-public sealed class GeneratedTypeInfo(Type type) : ITypeInfo
+public sealed class GeneratedTypeInfo(Type type) : ITypeInfo, IGeneratedTypeInfo
 {
     public IAssemblyInfo Assembly => throw new NotImplementedException();
 
@@ -141,6 +141,61 @@ public sealed class GeneratedTypeInfo(Type type) : ITypeInfo
     public IEnumerable<ITypeInfo> GetGenericArguments() => throw new NotImplementedException();
     public IMethodInfo GetMethod(string methodName, bool includePrivateMethod) => throw new NotImplementedException();
     public IEnumerable<IMethodInfo> GetMethods(bool includePrivateMethods) => throw new NotImplementedException();
+
+    public object[] CreateTestClassConstructorArguments()
+    {
+        throw new InvalidOperationException();
+        //var isStaticClass = Class.Type.GetTypeInfo().IsAbstract && Class.Type.GetTypeInfo().IsSealed;
+        //if (!isStaticClass)
+        //{
+        //    var ctor = SelectTestClassConstructor();
+        //    if (ctor != null)
+        //    {
+        //        var unusedArguments = new List<Tuple<int, ParameterInfo>>();
+        //        var parameters = ctor.GetParameters();
+
+        //        object[] constructorArguments = new object[parameters.Length];
+        //        for (int idx = 0; idx < parameters.Length; ++idx)
+        //        {
+        //            var parameter = parameters[idx];
+        //            object argumentValue;
+
+        //            if (TryGetConstructorArgument(ctor, idx, parameter, out argumentValue))
+        //                constructorArguments[idx] = argumentValue;
+        //            else if (parameter.HasDefaultValue)
+        //                constructorArguments[idx] = parameter.DefaultValue;
+        //            else if (parameter.IsOptional)
+        //                constructorArguments[idx] = parameter.ParameterType.GetTypeInfo().GetDefaultValue();
+        //            else if (parameter.GetCustomAttribute<ParamArrayAttribute>() != null)
+        //                constructorArguments[idx] = Array.CreateInstance(parameter.ParameterType, 0);
+        //            else
+        //                unusedArguments.Add(Tuple.Create(idx, parameter));
+        //        }
+
+        //        if (unusedArguments.Count > 0)
+        //            Aggregator.Add(new TestClassException(FormatConstructorArgsMissingMessage(ctor, unusedArguments)));
+
+        //        return constructorArguments;
+        //    }
+        //}
+
+        //return new object[0];
+    }
+
+    public ConstructorInfo SelectTestClassConstructor()
+    {
+        throw new InvalidOperationException();
+        //    var ctors = Class.Type.GetTypeInfo()
+        //                          .DeclaredConstructors
+        //                          .Where(ci => !ci.IsStatic && ci.IsPublic)
+        //                          .ToList();
+
+        //    if (ctors.Count == 1)
+        //        return ctors[0];
+
+        //    Aggregator.Add(new TestClassException("A test class may only define a single public constructor."));
+        //    return null;
+    }
 }
 
 public sealed class GeneratedAttributeInfo(CustomAttributeData attributeData) : IAttributeInfo

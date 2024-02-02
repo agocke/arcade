@@ -132,7 +132,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// Gets the generic types that were used to close the generic test method, if
         /// applicable; <c>null</c>, if the test method was not an open generic.
         /// </summary>
-        protected ITypeInfo[] MethodGenericTypes
+        protected ITypeInfo[]? MethodGenericTypes
         {
             get
             {
@@ -157,7 +157,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         }
 
         /// <inheritdoc/>
-        public ISourceInformation SourceInformation { get; set; }
+        public ISourceInformation? SourceInformation { get; set; }
 
         /// <inheritdoc/>
         public ITestMethod TestMethod { get; protected set; }
@@ -302,7 +302,7 @@ namespace Microsoft.DotNet.XunitSrcGen
                 }
             }
 
-            if (TestMethodArguments != null && method.IsGenericMethodDefinition)
+            if (TestMethodArguments != null && method!.IsGenericMethodDefinition)
             {
                 methodGenericTypes = Method.ResolveGenericTypes(TestMethodArguments);
                 Method = Method.MakeGenericMethod(MethodGenericTypes);

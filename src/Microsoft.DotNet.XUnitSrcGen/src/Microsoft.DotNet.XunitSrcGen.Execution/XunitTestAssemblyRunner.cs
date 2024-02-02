@@ -20,12 +20,12 @@ namespace Microsoft.DotNet.XunitSrcGen
     /// </summary>
     public class XunitTestAssemblyRunner : TestAssemblyRunner<IXunitTestCase>
     {
-        IAttributeInfo collectionBehaviorAttribute;
+        IAttributeInfo? collectionBehaviorAttribute;
         bool disableParallelization;
         bool initialized;
         int maxParallelThreads;
-        SynchronizationContext originalSyncContext;
-        MaxConcurrencySyncContext syncContext;
+        SynchronizationContext? originalSyncContext;
+        MaxConcurrencySyncContext? syncContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XunitTestAssemblyRunner"/> class.
@@ -208,8 +208,8 @@ namespace Microsoft.DotNet.XunitSrcGen
             else
                 taskRunner = code => Task.Run(code, cancellationTokenSource.Token);
 
-            List<Task<RunSummary>> parallel = null;
-            List<Func<Task<RunSummary>>> nonParallel = null;
+            List<Task<RunSummary>>? parallel = null;
+            List<Func<Task<RunSummary>>>? nonParallel = null;
             var summaries = new List<RunSummary>();
 
             foreach (var collection in OrderTestCollections())
@@ -268,7 +268,7 @@ namespace Microsoft.DotNet.XunitSrcGen
             => new XunitTestCollectionRunner(testCollection, testCases, DiagnosticMessageSink, messageBus, TestCaseOrderer, new ExceptionAggregator(Aggregator), cancellationTokenSource).RunAsync();
 
         [SecuritySafeCritical]
-        static void SetSynchronizationContext(SynchronizationContext context)
+        static void SetSynchronizationContext(SynchronizationContext? context)
             => SynchronizationContext.SetSynchronizationContext(context);
     }
 }

@@ -93,7 +93,7 @@ namespace Microsoft.DotNet.XunitSrcGen
             var missingParameters = new List<ParameterInfo>();
             var ctorArgs = ctor.GetParameters().Select(p =>
             {
-                object arg = null;
+                object? arg = null;
                 if (p.ParameterType == typeof(IMessageSink))
                     arg = DiagnosticMessageSink;
                 else
@@ -139,7 +139,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// orderer from the collection definition. If this function returns <c>null</c>, the
         /// test case orderer passed into the constructor will be used.
         /// </summary>
-        protected virtual ITestCaseOrderer GetTestCaseOrderer()
+        protected virtual ITestCaseOrderer? GetTestCaseOrderer()
         {
             if (TestCollection.CollectionDefinition != null)
             {
@@ -187,7 +187,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         }
 
         /// <inheritdoc/>
-        protected override Task<RunSummary> RunTestClassAsync(ITestClass testClass, IReflectionTypeInfo @class, IEnumerable<IXunitTestCase> testCases)
+        protected override Task<RunSummary> RunTestClassAsync(ITestClass testClass, IGeneratedTypeInfo @class, IEnumerable<IXunitTestCase> testCases)
             => new XunitTestClassRunner(testClass, @class, testCases, DiagnosticMessageSink, MessageBus, TestCaseOrderer, new ExceptionAggregator(Aggregator), CancellationTokenSource, CollectionFixtureMappings).RunAsync();
     }
 }
