@@ -30,7 +30,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// <param name="cancellationTokenSource">The task cancellation token source, used to cancel the test run.</param>
         protected TestMethodRunner(ITestMethod testMethod,
                                    IGeneratedTypeInfo @class,
-                                   IReflectionMethodInfo method,
+                                   IGeneratedMethodInfo method,
                                    IEnumerable<TTestCase> testCases,
                                    IMessageBus messageBus,
                                    ExceptionAggregator aggregator,
@@ -68,7 +68,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// <summary>
         /// Gets or sets the CLR method that contains the tests to be run.
         /// </summary>
-        protected IReflectionMethodInfo Method { get; set; }
+        protected IGeneratedMethodInfo Method { get; set; }
 
         /// <summary>
         /// Gets or sets the test cases to be run.

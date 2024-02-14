@@ -19,8 +19,11 @@ using Xunit.Sdk;
 // https://github.com/dotnet/runtime/issues/70432
 public class SrcGenTestRunner : XunitTestFramework
 {
-    private SrcGenTestRunner(IMessageSink messageSink)
-    : base(messageSink) { }
+    public readonly TestMessageSink TestsSink = new TestMessageSink();
+
+    public SrcGenTestRunner(IMessageSink messageSink)
+    : base(messageSink)
+    { }
 
     public SrcGenTestRunner()
     : this(new ConsoleDiagnosticMessageSink())
@@ -175,19 +178,18 @@ public class SrcGenTestRunner : XunitTestFramework
 
         var diagnosticSink = new ConsoleDiagnosticMessageSink();
         var testsFinished = new TaskCompletionSource<ValueTuple>();
-        var testSink = new TestMessageSink();
 #pragma warning disable CS0618
-        var summarySink = new DelegatingExecutionSummarySink(testSink,
+        var summarySink = new DelegatingExecutionSummarySink(TestsSink,
             () => false,
             (completed, summary) => Console.WriteLine($"Tests run: {summary.Total}, Errors: {summary.Errors}, Failures: {summary.Failed}, Skipped: {summary.Skipped}. Time: {TimeSpan.FromSeconds((double)summary.Time).TotalSeconds}s"));
         var resultsXmlAssembly = new XElement("assembly");
         var resultsSink = new DelegatingXmlCreationSink(summarySink, resultsXmlAssembly);
 #pragma warning restore CS0618
 
-        testSink.Execution.TestSkippedEvent += args => { Console.WriteLine($"[SKIP] {args.Message.Test.DisplayName}"); };
-        testSink.Execution.TestFailedEvent += args => { Console.WriteLine($"[FAIL] {args.Message.Test.DisplayName}{Environment.NewLine}{Xunit.ExceptionUtility.CombineMessages(args.Message)}{Environment.NewLine}{Xunit.ExceptionUtility.CombineStackTraces(args.Message)}"); };
+        TestsSink.Execution.TestSkippedEvent += args => { Console.WriteLine($"[SKIP] {args.Message.Test.DisplayName}"); };
+        TestsSink.Execution.TestFailedEvent += args => { Console.WriteLine($"[FAIL] {args.Message.Test.DisplayName}{Environment.NewLine}{Xunit.ExceptionUtility.CombineMessages(args.Message)}{Environment.NewLine}{Xunit.ExceptionUtility.CombineStackTraces(args.Message)}"); };
 
-        testSink.Execution.TestAssemblyFinishedEvent += args =>
+        TestsSink.Execution.TestAssemblyFinishedEvent += args =>
         {
             Console.WriteLine($"Finished {args.Message.TestAssembly.Assembly}{Environment.NewLine}");
             testsFinished.SetResult(new ValueTuple());

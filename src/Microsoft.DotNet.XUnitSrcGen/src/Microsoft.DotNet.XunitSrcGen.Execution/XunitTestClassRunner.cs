@@ -171,21 +171,7 @@ namespace Microsoft.DotNet.XunitSrcGen
                 }
             }
 
-            var testClassTypeInfo = Class.Type.GetTypeInfo();
-            if (testClassTypeInfo.ImplementedInterfaces.Any(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollectionFixture<>)))
-                Aggregator.Add(new TestClassException("A test class may not be decorated with ICollectionFixture<> (decorate the test collection class instead)."));
-
-            var createClassFixtureAsyncTasks = new List<Task>();
-            foreach (var interfaceType in testClassTypeInfo.ImplementedInterfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == typeof(IClassFixture<>)))
-                createClassFixtureAsyncTasks.Add(CreateClassFixtureAsync(interfaceType.GetTypeInfo().GenericTypeArguments.Single()));
-
-            if (TestClass.TestCollection.CollectionDefinition != null)
-            {
-                var declarationType = ((IReflectionTypeInfo)TestClass.TestCollection.CollectionDefinition).Type;
-                foreach (var interfaceType in declarationType.GetTypeInfo().ImplementedInterfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == typeof(IClassFixture<>)))
-                    createClassFixtureAsyncTasks.Add(CreateClassFixtureAsync(interfaceType.GetTypeInfo().GenericTypeArguments.Single()));
-            }
-
+            var createClassFixtureAsyncTasks = Class.GetClassFixturesAsync();
             await Task.WhenAll(createClassFixtureAsyncTasks);
         }
 
@@ -201,7 +187,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         }
 
         /// <inheritdoc/>
-        protected override Task<RunSummary> RunTestMethodAsync(ITestMethod testMethod, IReflectionMethodInfo method, IEnumerable<IXunitTestCase> testCases, object[] constructorArguments)
+        protected override Task<RunSummary> RunTestMethodAsync(ITestMethod testMethod, IGeneratedMethodInfo method, IEnumerable<IXunitTestCase> testCases, object[] constructorArguments)
             => new XunitTestMethodRunner(testMethod, Class, method, testCases, DiagnosticMessageSink, MessageBus, new ExceptionAggregator(Aggregator), CancellationTokenSource, constructorArguments).RunAsync();
 
         /// <inheritdoc/>

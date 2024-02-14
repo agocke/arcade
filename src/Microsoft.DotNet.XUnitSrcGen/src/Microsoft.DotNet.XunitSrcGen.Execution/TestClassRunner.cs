@@ -118,14 +118,14 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// This method should NEVER throw; any exceptions should be placed into the <see cref="Aggregator"/>.
         /// </summary>
         protected virtual Task AfterTestClassStartingAsync()
-            => CommonTasks.Completed;
+            => Task.CompletedTask;
 
         /// <summary>
         /// This method is called just before <see cref="ITestClassFinished"/> is sent.
         /// This method should NEVER throw; any exceptions should be placed into the <see cref="Aggregator"/>.
         /// </summary>
         protected virtual Task BeforeTestClassFinishedAsync()
-            => CommonTasks.Completed;
+            => Task.CompletedTask;
 
         /// <summary>
         /// Runs the tests in the test class.
@@ -195,7 +195,7 @@ namespace Microsoft.DotNet.XunitSrcGen
 
             foreach (var method in orderedTestCases.GroupBy(tc => tc.TestMethod, TestMethodComparer.Instance))
             {
-                summary.Aggregate(await RunTestMethodAsync(method.Key, (IReflectionMethodInfo)method.Key.Method, method, constructorArguments));
+                summary.Aggregate(await RunTestMethodAsync(method.Key, (IGeneratedMethodInfo)method.Key.Method, method, constructorArguments));
                 if (CancellationTokenSource.IsCancellationRequested)
                     break;
             }
@@ -211,7 +211,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// <param name="testCases">The test cases to be run.</param>
         /// <param name="constructorArguments">The constructor arguments that will be used to create the test class.</param>
         /// <returns>Returns summary information about the tests that were run.</returns>
-        protected abstract Task<RunSummary> RunTestMethodAsync(ITestMethod testMethod, IReflectionMethodInfo method, IEnumerable<TTestCase> testCases, object[] constructorArguments);
+        protected abstract Task<RunSummary> RunTestMethodAsync(ITestMethod testMethod, IGeneratedMethodInfo method, IEnumerable<TTestCase> testCases, object[] constructorArguments);
 
         /// <summary>
         /// Selects the constructor to be used for the test class. By default, chooses the parameterless

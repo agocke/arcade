@@ -131,7 +131,7 @@ namespace Microsoft.DotNet.XunitSrcGen
 
             foreach (var testCasesByClass in TestCases.GroupBy(tc => tc.TestMethod.TestClass, TestClassComparer.Instance))
             {
-                summary.Aggregate(await RunTestClassAsync(testCasesByClass.Key, testCasesByClass.Key.Class, testCasesByClass));
+                summary.Aggregate(await RunTestClassAsync(testCasesByClass.Key, (IGeneratedTypeInfo)testCasesByClass.Key.Class, testCasesByClass));
                 if (CancellationTokenSource.IsCancellationRequested)
                     break;
             }

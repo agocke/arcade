@@ -13,8 +13,10 @@ using Xunit.Sdk;
 
 namespace Microsoft.DotNet.XunitSrcGen;
 
-public sealed class GeneratedTestCase(
-    GeneratedTestMethod method) : ITestCase, IXunitTestCase
+public abstract class GeneratedTestCase(
+    string methodName,
+    string containingTypeName,
+    string assemblyName) : ITestCase, IXunitTestCase
 {
     public string DisplayName => throw new NotImplementedException();
 
@@ -22,7 +24,9 @@ public sealed class GeneratedTestCase(
 
     public ISourceInformation SourceInformation { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-    public ITestMethod TestMethod => method;
+    public ITestMethod TestMethod => new GeneratedTestMethod(
+        new GeneratedMethodInfo(methodName),
+        new GeneratedTestClass(assemblyName, containingTypeName));
 
     public object[] TestMethodArguments => throw new NotImplementedException();
 
@@ -37,7 +41,14 @@ public sealed class GeneratedTestCase(
     public int Timeout => throw new NotImplementedException();
 
     public void Deserialize(IXunitSerializationInfo info) => throw new NotImplementedException();
-    public Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource) => throw new NotImplementedException();
+
+    public abstract Task<RunSummary> RunAsync(
+        IMessageSink diagnosticMessageSink,
+        IMessageBus messageBus,
+        object[] constructorArguments,
+        ExceptionAggregator aggregator,
+        CancellationTokenSource cancellationTokenSource);
+
     public void Serialize(IXunitSerializationInfo info) => throw new NotImplementedException();
 }
 
@@ -53,23 +64,21 @@ public sealed class GeneratedTestMethod(
     public void Serialize(IXunitSerializationInfo info) => throw new NotImplementedException();
 }
 
-public sealed class GeneratedTestClass(
-    GeneratedTypeInfo typeInfo,
-    GeneratedTestCollection collection) : ITestClass
+public sealed class GeneratedTestClass(string assemblyName, string typeName) : ITestClass
 {
-    public ITypeInfo Class => typeInfo;
+    public ITypeInfo Class => new GeneratedTypeInfo(typeName);
 
-    public ITestCollection TestCollection => collection;
+    public ITestCollection TestCollection => new GeneratedTestCollection(assemblyName, new());
 
     public void Deserialize(IXunitSerializationInfo info) => throw new NotImplementedException();
     public void Serialize(IXunitSerializationInfo info) => throw new NotImplementedException();
 }
 
-public sealed class GeneratedTestCollection(GeneratedTestAssembly testAssembly) : ITestCollection
+public sealed class GeneratedTestCollection(string assemblyName, GeneratedTestAssembly testAssembly) : ITestCollection
 {
     public ITypeInfo? CollectionDefinition => null;
 
-    public string DisplayName => throw new NotImplementedException();
+    public string DisplayName => assemblyName;
 
     public ITestAssembly TestAssembly => testAssembly;
 
@@ -89,7 +98,7 @@ public sealed class GeneratedTestAssembly : ITestAssembly
     public void Serialize(IXunitSerializationInfo info) => throw new NotImplementedException();
 }
 
-public sealed class GeneratedMethodInfo(MethodInfo methodInfo) : IMethodInfo
+public sealed class GeneratedMethodInfo(string methodName) : IMethodInfo, IGeneratedMethodInfo
 {
     public bool IsAbstract => throw new NotImplementedException();
 
@@ -99,13 +108,13 @@ public sealed class GeneratedMethodInfo(MethodInfo methodInfo) : IMethodInfo
 
     public bool IsStatic => throw new NotImplementedException();
 
-    public string Name => methodInfo.Name;
+    public string Name => methodName;
 
     public ITypeInfo ReturnType => throw new NotImplementedException();
 
     public ITypeInfo Type => throw new NotImplementedException();
 
-    public MethodInfo MethodInfo => methodInfo;
+    public MethodInfo MethodInfo => throw new NotImplementedException();
 
     public IEnumerable<IAttributeInfo> GetCustomAttributes(string assemblyQualifiedAttributeTypeName) => throw new NotImplementedException();
     public IEnumerable<ITypeInfo> GetGenericArguments() => throw new NotImplementedException();
@@ -113,7 +122,7 @@ public sealed class GeneratedMethodInfo(MethodInfo methodInfo) : IMethodInfo
     public IMethodInfo MakeGenericMethod(params ITypeInfo[] typeArguments) => throw new NotImplementedException();
 }
 
-public sealed class GeneratedTypeInfo(Type type) : ITypeInfo, IGeneratedTypeInfo
+public sealed class GeneratedTypeInfo(string name) : ITypeInfo, IGeneratedTypeInfo
 {
     public IAssemblyInfo Assembly => throw new NotImplementedException();
 
@@ -131,20 +140,39 @@ public sealed class GeneratedTypeInfo(Type type) : ITypeInfo, IGeneratedTypeInfo
 
     public bool IsValueType => throw new NotImplementedException();
 
-    public string Name => type.Name;
+    public string Name => name;
 
     public IEnumerable<IAttributeInfo> GetCustomAttributes(string assemblyQualifiedAttributeTypeName)
-        => type.GetCustomAttributesData()
-            .Where(a => a?.AttributeType?.AssemblyQualifiedName == assemblyQualifiedAttributeTypeName)
-            .Select(a => new GeneratedAttributeInfo(a));
+        => Array.Empty<IAttributeInfo>();
 
     public IEnumerable<ITypeInfo> GetGenericArguments() => throw new NotImplementedException();
     public IMethodInfo GetMethod(string methodName, bool includePrivateMethod) => throw new NotImplementedException();
     public IEnumerable<IMethodInfo> GetMethods(bool includePrivateMethods) => throw new NotImplementedException();
 
+    public List<Task> GetClassFixturesAsync()
+    {
+        return new List<Task>();
+
+        // var testClassTypeInfo = Class.Type.GetTypeInfo();
+        // if (testClassTypeInfo.ImplementedInterfaces.Any(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollectionFixture<>)))
+        //     Aggregator.Add(new TestClassException("A test class may not be decorated with ICollectionFixture<> (decorate the test collection class instead)."));
+
+        // var createClassFixtureAsyncTasks =  new List<Task>();
+        // foreach (var interfaceType in testClassTypeInfo.ImplementedInterfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == typeof(IClassFixture<>)))
+        //     createClassFixtureAsyncTasks.Add(CreateClassFixtureAsync(interfaceType.GetTypeInfo().GenericTypeArguments.Single()));
+
+        // if (TestClass.TestCollection.CollectionDefinition != null)
+        // {
+        //     var declarationType = ((IReflectionTypeInfo)TestClass.TestCollection.CollectionDefinition).Type;
+        //     foreach (var interfaceType in declarationType.GetTypeInfo().ImplementedInterfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == typeof(IClassFixture<>)))
+        //         createClassFixtureAsyncTasks.Add(CreateClassFixtureAsync(interfaceType.GetTypeInfo().GenericTypeArguments.Single()));
+        // }
+    }
+
     public object[] CreateTestClassConstructorArguments()
     {
-        throw new InvalidOperationException();
+        return Array.Empty<object>();
+
         //var isStaticClass = Class.Type.GetTypeInfo().IsAbstract && Class.Type.GetTypeInfo().IsSealed;
         //if (!isStaticClass)
         //{

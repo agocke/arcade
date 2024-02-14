@@ -31,7 +31,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// <param name="constructorArguments">The constructor arguments for the test class.</param>
         public XunitTestMethodRunner(ITestMethod testMethod,
                                      IGeneratedTypeInfo @class,
-                                     IReflectionMethodInfo method,
+                                     IGeneratedMethodInfo method,
                                      IEnumerable<IXunitTestCase> testCases,
                                      IMessageSink diagnosticMessageSink,
                                      IMessageBus messageBus,

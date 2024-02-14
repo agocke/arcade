@@ -6,6 +6,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <NoWarn>$(NoWarn);xUnit3000</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
