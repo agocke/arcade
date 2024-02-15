@@ -25,7 +25,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         bool initialized;
         IMethodInfo? method;
         ITypeInfo[]? methodGenericTypes;
-        string? skipReason;
+        //string? skipReason;
         Dictionary<string, List<string>>? traits;
         volatile string uniqueID;
 
@@ -93,19 +93,8 @@ namespace Microsoft.DotNet.XunitSrcGen
         protected internal TestMethodDisplayOptions DefaultMethodDisplayOptions { get; private set; }
 
         /// <inheritdoc/>
-        public string DisplayName
-        {
-            get
-            {
-                EnsureInitialized();
-                return displayName;
-            }
-            protected set
-            {
-                EnsureInitialized();
-                displayName = value;
-            }
-        }
+        public abstract string DisplayName { get; }
+
 
         /// <summary>
         /// Gets or sets the exception that happened during initialization. When this is set, then
@@ -142,19 +131,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         }
 
         /// <inheritdoc/>
-        public string SkipReason
-        {
-            get
-            {
-                EnsureInitialized();
-                return skipReason;
-            }
-            protected set
-            {
-                EnsureInitialized();
-                skipReason = value;
-            }
-        }
+        public abstract string? SkipReason { get; }
 
         /// <inheritdoc/>
         public ISourceInformation? SourceInformation { get; set; }

@@ -83,7 +83,8 @@ namespace Microsoft.DotNet.XunitSrcGen
                     var testMethod = new TestMethod(testClass, methodInfo);
                     var defaultMethodDisplay = (TestMethodDisplay)int.Parse(parts[2], CultureInfo.InvariantCulture);
                     var defaultMethodDisplayOptions = (TestMethodDisplayOptions)int.Parse(parts[3], CultureInfo.InvariantCulture);
-                    return new XunitTestCase(DiagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod);
+                    throw new InvalidOperationException();
+                    //return new GeneratedTest(DiagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod);
                 }
             }
 

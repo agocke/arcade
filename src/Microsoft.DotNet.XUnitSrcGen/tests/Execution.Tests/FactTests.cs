@@ -48,19 +48,23 @@ internal sealed class GeneratedTestCase_Fact1() : GeneratedTestCase(
     nameof(SampleTestClass),
     "Execution.Tests")
 {
-    public override Task<RunSummary> RunAsync(
-        IMessageSink diagnosticMessageSink,
-        IMessageBus messageBus,
-        object[] constructorArguments,
-        ExceptionAggregator aggregator,
-        CancellationTokenSource cancellationTokenSource)
-    {
-        var testClass = new SampleTestClass();
-        testClass.Fact1();
-        return Task.FromResult(new RunSummary() {
-            Total = 1
-        });
-    }
+    public override string DisplayName => "Fact1";
+    public override string? SkipReason => null;
+    public override int Timeout => 0;
+
+    //public override Task<RunSummary> RunAsync(
+    //    IMessageSink diagnosticMessageSink,
+    //    IMessageBus messageBus,
+    //    object[] constructorArguments,
+    //    ExceptionAggregator aggregator,
+    //    CancellationTokenSource cancellationTokenSource)
+    //{
+    //    var testClass = new SampleTestClass();
+    //    testClass.Fact1();
+    //    return Task.FromResult(new RunSummary() {
+    //        Total = 1
+    //    });
+    //}
 }
 
 public sealed class SampleTestClass

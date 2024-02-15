@@ -24,21 +24,22 @@ namespace Microsoft.DotNet.XunitSrcGen
     /// both <see cref="FactAttribute"/> and <see cref="TheoryAttribute"/>.
     /// </summary>
     [DebuggerDisplay(@"\{ class = {TestMethod.TestClass.Class.Name}, method = {TestMethod.Method.Name}, display = {DisplayName}, skip = {SkipReason} \}")]
-    public class XunitTestCase : TestMethodTestCase, IXunitTestCase
+    public abstract class XunitTestCase : TestMethodTestCase, IXunitTestCase
     {
         static ConcurrentDictionary<string, IEnumerable<IAttributeInfo>> assemblyTraitAttributeCache = new ConcurrentDictionary<string, IEnumerable<IAttributeInfo>>(StringComparer.OrdinalIgnoreCase);
         static ConcurrentDictionary<string, IEnumerable<IAttributeInfo>> typeTraitAttributeCache = new ConcurrentDictionary<string, IEnumerable<IAttributeInfo>>(StringComparer.OrdinalIgnoreCase);
 
-        int timeout;
+        //int timeout;
 
         /// <summary/>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
-        public XunitTestCase()
+      //  [EditorBrowsable(EditorBrowsableState.Never)]
+      //  [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
+        public XunitTestCase(ITestMethod testMethod)
         {
             // No way for us to get access to the message sink on the execution deserialization path, but that should
             // be okay, because we assume all the issues were reported during discovery.
             DiagnosticMessageSink = new NullMessageSink();
+            TestMethod = testMethod;
         }
 
         /// <summary>
@@ -65,19 +66,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         protected IMessageSink DiagnosticMessageSink { get; }
 
         /// <inheritdoc/>
-        public int Timeout
-        {
-            get
-            {
-                EnsureInitialized();
-                return timeout;
-            }
-            protected set
-            {
-                EnsureInitialized();
-                timeout = value;
-            }
-        }
+        public abstract int Timeout { get; }
 
         /// <summary>
         /// Gets the display name for the test case. Calls <see cref="TypeUtility.GetDisplayNameWithArguments"/>
@@ -113,12 +102,12 @@ namespace Microsoft.DotNet.XunitSrcGen
         {
             base.Initialize();
 
-            var factAttribute = TestMethod.Method.GetCustomAttributes(typeof(FactAttribute)).First();
-            var baseDisplayName = factAttribute.GetNamedArgument<string>("DisplayName") ?? BaseDisplayName;
+            //var factAttribute = TestMethod.Method.GetCustomAttributes(typeof(FactAttribute)).First();
+            //var baseDisplayName = factAttribute.GetNamedArgument<string>("DisplayName") ?? BaseDisplayName;
 
-            DisplayName = GetDisplayName(factAttribute, baseDisplayName);
-            SkipReason = GetSkipReason(factAttribute);
-            Timeout = GetTimeout(factAttribute);
+            //DisplayName = GetDisplayName(factAttribute, baseDisplayName);
+            //SkipReason = GetSkipReason(factAttribute);
+            //Timeout = GetTimeout(factAttribute);
 
             foreach (var traitAttribute in GetTraitAttributesData(TestMethod))
             {
@@ -143,9 +132,10 @@ namespace Microsoft.DotNet.XunitSrcGen
 
         static IEnumerable<IAttributeInfo> GetTraitAttributesData(ITestMethod testMethod)
         {
-            return GetCachedTraitAttributes(testMethod.TestClass.Class.Assembly)
-                  .Concat(testMethod.Method.GetCustomAttributes(typeof(ITraitAttribute)))
-                  .Concat(GetCachedTraitAttributes(testMethod.TestClass.Class));
+            return ((GeneratedTestClass)testMethod.TestClass).GetTraitAttributesData();
+            //return GetCachedTraitAttributes(testMethod.TestClass.Class.Assembly)
+            //      .Concat(testMethod.Method.GetCustomAttributes(typeof(ITraitAttribute)))
+            //      .Concat(GetCachedTraitAttributes(testMethod.TestClass.Class));
         }
 
         /// <inheritdoc/>
@@ -154,7 +144,7 @@ namespace Microsoft.DotNet.XunitSrcGen
                                                  object[] constructorArguments,
                                                  ExceptionAggregator aggregator,
                                                  CancellationTokenSource cancellationTokenSource)
-            => new XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments, TestMethodArguments, messageBus, aggregator, cancellationTokenSource).RunAsync();
+            => new Microsoft.DotNet.XunitSrcGen.XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments, TestMethodArguments, messageBus, aggregator, cancellationTokenSource).RunAsync();
 
         /// <inheritdoc/>
         public override void Serialize(IXunitSerializationInfo data)
@@ -169,7 +159,7 @@ namespace Microsoft.DotNet.XunitSrcGen
         {
             base.Deserialize(data);
 
-            Timeout = data.GetValue<int>("Timeout");
+            //Timeout = data.GetValue<int>("Timeout");
         }
     }
 }

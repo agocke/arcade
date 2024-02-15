@@ -16,40 +16,10 @@ namespace Microsoft.DotNet.XunitSrcGen;
 public abstract class GeneratedTestCase(
     string methodName,
     string containingTypeName,
-    string assemblyName) : ITestCase, IXunitTestCase
-{
-    public string DisplayName => throw new NotImplementedException();
-
-    public string SkipReason => throw new NotImplementedException();
-
-    public ISourceInformation SourceInformation { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public ITestMethod TestMethod => new GeneratedTestMethod(
+    string assemblyName) : XunitTestCase(new GeneratedTestMethod(
         new GeneratedMethodInfo(methodName),
-        new GeneratedTestClass(assemblyName, containingTypeName));
-
-    public object[] TestMethodArguments => throw new NotImplementedException();
-
-    public Dictionary<string, List<string>> Traits => throw new NotImplementedException();
-
-    public string UniqueID => throw new NotImplementedException();
-
-    public Exception InitializationException => throw new NotImplementedException();
-
-    public IMethodInfo Method => throw new NotImplementedException();
-
-    public int Timeout => throw new NotImplementedException();
-
-    public void Deserialize(IXunitSerializationInfo info) => throw new NotImplementedException();
-
-    public abstract Task<RunSummary> RunAsync(
-        IMessageSink diagnosticMessageSink,
-        IMessageBus messageBus,
-        object[] constructorArguments,
-        ExceptionAggregator aggregator,
-        CancellationTokenSource cancellationTokenSource);
-
-    public void Serialize(IXunitSerializationInfo info) => throw new NotImplementedException();
+        new GeneratedTestClass(assemblyName, containingTypeName))), ITestCase
+{
 }
 
 public sealed class GeneratedTestMethod(
@@ -72,6 +42,9 @@ public sealed class GeneratedTestClass(string assemblyName, string typeName) : I
 
     public void Deserialize(IXunitSerializationInfo info) => throw new NotImplementedException();
     public void Serialize(IXunitSerializationInfo info) => throw new NotImplementedException();
+
+    // NotImplemented
+    internal IEnumerable<IAttributeInfo> GetTraitAttributesData() => Array.Empty<IAttributeInfo>();
 }
 
 public sealed class GeneratedTestCollection(string assemblyName, GeneratedTestAssembly testAssembly) : ITestCollection
