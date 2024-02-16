@@ -5,13 +5,20 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
+    <!-- This project has a complicated xunit graph and need to import xunit packages manually -->
+    <IsTestProject>false</IsTestProject>
     <NoWarn>$(NoWarn);xUnit3000</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SampleProject.Tests\SampleProject.Tests.csproj" />
     <ProjectReference Include="..\..\src\Microsoft.DotNet.XunitSrcGen.Execution\Microsoft.DotNet.XunitSrcGen.Execution.csproj" />
+    <ProjectReference Include="..\SampleTests\SampleTests.csproj" />
+    <ProjectReference Include="../../../Microsoft.DotNet.XUnitAssert/src/Microsoft.DotNet.XUnitAssert.csproj" />
+
+    <PackageReference Include="xunit.core" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+
   </ItemGroup>
 
 </Project>

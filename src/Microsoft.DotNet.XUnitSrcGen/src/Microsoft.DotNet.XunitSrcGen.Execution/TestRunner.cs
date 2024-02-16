@@ -31,6 +31,7 @@ namespace Microsoft.DotNet.XunitSrcGen
                              IMessageBus messageBus,
                              object[] constructorArguments,
                              object[] testMethodArguments,
+                             GeneratedTestMethod testMethod,
                              string skipReason,
                              ExceptionAggregator aggregator,
                              CancellationTokenSource cancellationTokenSource)
@@ -42,6 +43,8 @@ namespace Microsoft.DotNet.XunitSrcGen
             MessageBus = messageBus;
             ConstructorArguments = constructorArguments;
             TestMethodArguments = testMethodArguments;
+            TestMethod = testMethod;
+            TestClass = testMethod.TestClass;
             SkipReason = skipReason;
             Aggregator = aggregator;
             CancellationTokenSource = cancellationTokenSource;
@@ -90,12 +93,12 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// <summary>
         /// Gets or sets the runtime type of the class that contains the test method.
         /// </summary>
-        protected Type TestClass { get; set; }
+        protected GeneratedTestClass TestClass { get; set; }
 
         /// <summary>
         /// Gets or sets the runtime method of the method that contains the test.
         /// </summary>
-        protected MethodInfo TestMethod { get; set; }
+        protected GeneratedTestMethod TestMethod { get; set; }
 
         /// <summary>
         /// Gets or sets the arguments to pass to the test method when it's being invoked.

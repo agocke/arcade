@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>false</IsTestProject>
+    <GenerateProgramFile>false</GenerateProgramFile>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.core" />
+    <ProjectReference Include="../../../Microsoft.DotNet.XUnitAssert/src/Microsoft.DotNet.XUnitAssert.csproj" />
+  </ItemGroup>
+
+</Project>

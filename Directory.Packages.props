@@ -64,6 +64,7 @@
     <PackageVersion Include="Microsoft.NET.Sdk.WorkloadManifestReader" Version="$(MicrosoftNetSdkWorkloadManifestReaderVersion)" />
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
     <PackageVersion Include="xunit.runner.utility" Version="2.6.6" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkVersion)" />
   </ItemGroup>
   <!-- external -->
   <ItemGroup>
@@ -91,10 +92,12 @@
     <PackageVersion Include="Octokit" Version="7.1.0" />
     <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.23307.1" />
     <PackageVersion Include="xunit" Version="$(XUnitVersion)" />
+    <PackageVersion Include="xunit.core" Version="$(XUnitVersion)" />
     <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
     <PackageVersion Include="xunit.extensibility.core" Version="$(XUnitVersion)" />
     <PackageVersion Include="xunit.extensibility.execution" Version="$(XUnitVersion)" />
     <PackageVersion Include="xunit.runner.reporters" Version="$(XUnitVersion)" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="$(XUnitRunnerVisualStudioVersion)" />
     <PackageVersion Include="nsubstitute" Version="5.1.0" />
   </ItemGroup>
 </Project>

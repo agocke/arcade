@@ -32,11 +32,12 @@ namespace Microsoft.DotNet.XunitSrcGen
                                IMessageBus messageBus,
                                object[] constructorArguments,
                                object[] testMethodArguments,
+                               GeneratedTestMethod testMethod,
                                string skipReason,
                                IReadOnlyList<BeforeAfterTestAttribute> beforeAfterAttributes,
                                ExceptionAggregator aggregator,
                                CancellationTokenSource cancellationTokenSource)
-            : base(test, messageBus, constructorArguments, testMethodArguments, skipReason, aggregator, cancellationTokenSource)
+            : base(test, messageBus, constructorArguments, testMethodArguments, testMethod, skipReason, aggregator, cancellationTokenSource)
         {
             this.beforeAfterAttributes = beforeAfterAttributes;
         }

@@ -13,29 +13,40 @@ using Xunit.Sdk;
 
 namespace Microsoft.DotNet.XunitSrcGen;
 
-public abstract class GeneratedTestCase(
-    string methodName,
-    string containingTypeName,
-    string assemblyName) : XunitTestCase(new GeneratedTestMethod(
-        new GeneratedMethodInfo(methodName),
-        new GeneratedTestClass(assemblyName, containingTypeName))), ITestCase
+public abstract class GeneratedTestCase(GeneratedTestMethod testMethod)
+    : XunitTestCase(testMethod), ITestCase
 {
 }
 
-public sealed class GeneratedTestMethod(
-    GeneratedMethodInfo methodInfo,
-    GeneratedTestClass testClass) : ITestMethod
+public abstract class GeneratedTestMethod(
+    GeneratedTestClass testClass,
+    string methodName,
+    bool isStatic) : ITestMethod
 {
-    public IMethodInfo Method => methodInfo;
+    public abstract bool IsAsync { get; }
+    public abstract bool IsAsyncVoid { get; }
 
-    public ITestClass TestClass => testClass;
+    public bool IsStatic => isStatic;
+    public IMethodInfo Method { get; } = new GeneratedMethodInfo(methodName);
+
+    public GeneratedTestClass TestClass => testClass;
+
+    ITestClass ITestMethod.TestClass => TestClass;
+
+    public abstract object Invoke(object receiver, params object?[]? parameters);
 
     public void Deserialize(IXunitSerializationInfo info) => throw new NotImplementedException();
     public void Serialize(IXunitSerializationInfo info) => throw new NotImplementedException();
 }
 
-public sealed class GeneratedTestClass(string assemblyName, string typeName) : ITestClass
+public sealed class GeneratedParameter()
 {
+}
+
+public abstract class GeneratedTestClass(string assemblyName, string typeName) : ITestClass
+{
+    public abstract object Create(object[] constructorArguments);
+
     public ITypeInfo Class => new GeneratedTypeInfo(typeName);
 
     public ITestCollection TestCollection => new GeneratedTestCollection(assemblyName, new());

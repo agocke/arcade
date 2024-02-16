@@ -144,7 +144,7 @@ namespace Microsoft.DotNet.XunitSrcGen
                                                  object[] constructorArguments,
                                                  ExceptionAggregator aggregator,
                                                  CancellationTokenSource cancellationTokenSource)
-            => new Microsoft.DotNet.XunitSrcGen.XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments, TestMethodArguments, messageBus, aggregator, cancellationTokenSource).RunAsync();
+            => new Microsoft.DotNet.XunitSrcGen.XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments, TestMethodArguments, (GeneratedTestMethod)TestMethod, messageBus, aggregator, cancellationTokenSource).RunAsync();
 
         /// <inheritdoc/>
         public override void Serialize(IXunitSerializationInfo data)

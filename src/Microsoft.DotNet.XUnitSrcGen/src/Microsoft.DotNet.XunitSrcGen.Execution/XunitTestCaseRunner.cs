@@ -32,6 +32,7 @@ namespace Microsoft.DotNet.XunitSrcGen
                                    string skipReason,
                                    object[] constructorArguments,
                                    object[] testMethodArguments,
+                                   GeneratedTestMethod testMethod,
                                    IMessageBus messageBus,
                                    ExceptionAggregator aggregator,
                                    CancellationTokenSource cancellationTokenSource)
@@ -41,6 +42,7 @@ namespace Microsoft.DotNet.XunitSrcGen
             SkipReason = skipReason;
             ConstructorArguments = constructorArguments;
 
+            TestMethod = testMethod;
             // NotImplemented
             // var parameters = TestMethod.GetParameters();
             // var parameterTypes = new Type[parameters.Length];
@@ -79,6 +81,8 @@ namespace Microsoft.DotNet.XunitSrcGen
         /// </summary>
         protected string SkipReason { get; set; }
 
+        protected GeneratedTestMethod TestMethod { get; }
+
         /// <summary>
         /// Gets or sets the arguments to pass to the test method when it's being invoked.
         /// </summary>
@@ -97,11 +101,12 @@ namespace Microsoft.DotNet.XunitSrcGen
                                                            IMessageBus messageBus,
                                                            object[] constructorArguments,
                                                            object[] testMethodArguments,
+                                                           GeneratedTestMethod testMethod,
                                                            string skipReason,
                                                            IReadOnlyList<BeforeAfterTestAttribute> beforeAfterAttributes,
                                                            ExceptionAggregator aggregator,
                                                            CancellationTokenSource cancellationTokenSource)
-            => new XunitTestRunner(test, messageBus, constructorArguments, testMethodArguments,
+            => new XunitTestRunner(test, messageBus, constructorArguments, testMethodArguments, testMethod,
                                    skipReason, beforeAfterAttributes, new ExceptionAggregator(aggregator), cancellationTokenSource);
 
         /// <summary>
@@ -126,7 +131,7 @@ namespace Microsoft.DotNet.XunitSrcGen
 
         /// <inheritdoc/>
         protected override Task<RunSummary> RunTestAsync()
-            => CreateTestRunner(CreateTest(TestCase, DisplayName), MessageBus, ConstructorArguments, TestMethodArguments,
+            => CreateTestRunner(CreateTest(TestCase, DisplayName), MessageBus, ConstructorArguments, TestMethodArguments, TestMethod,
                                 SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync();
     }
 }

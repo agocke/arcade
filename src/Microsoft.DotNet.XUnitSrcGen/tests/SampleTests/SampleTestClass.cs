@@ -3,14 +3,18 @@
 
 using Xunit;
 
-namespace SampleProject.Tests;
+namespace SampleTests;
 
-public class UnitTest1
+public class SampleTestClass
 {
     [Fact]
-    public void Test1()
-    {
+    public void Fact1()
+    { }
 
+    [Fact]
+    public void FailingFact()
+    {
+        Assert.True(false);
     }
 
     [Theory]
