@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName Condition=" '$(TargetFramework)' == 'net8.0' ">xunit.v3.assert.netcore.tests</AssemblyName>
+    <!-- This is a test project, vulnerabilities here aren't shipped -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
