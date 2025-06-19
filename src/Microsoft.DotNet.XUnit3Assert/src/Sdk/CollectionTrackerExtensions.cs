@@ -71,6 +71,9 @@ namespace Xunit.Sdk
 			if (enumerable is CollectionTracker result)
 				return result;
 
+#if XUNIT_AOT
+			return CollectionTracker.Wrap(enumerable);
+#else
 			// CollectionTracker.Wrap for the non-T enumerable uses the CastIterator, which has terrible
 			// performance during iteration. We do our best to try to get a T and dynamically invoke the
 			// generic version of AsTracker as we can.
@@ -86,6 +89,7 @@ namespace Xunit.Sdk
 #endif
 
 			return method.Invoke(null, new object[] { enumerable }) as CollectionTracker ?? CollectionTracker.Wrap(enumerable);
+#endif // !XUNIT_AOT
 		}
 
 		/// <summary>

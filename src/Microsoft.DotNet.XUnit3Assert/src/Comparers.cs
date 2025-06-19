@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Xunit.Sdk;
+using DAM = System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute;
 
 namespace Xunit
 {
@@ -23,7 +24,7 @@ namespace Xunit
 	partial class Assert
 	{
 #if XUNIT_NULLABLE
-		static IEqualityComparer<T?> GetEqualityComparer<T>(IEqualityComparer? innerComparer = null) =>
+		static IEqualityComparer<T?> GetEqualityComparer<[DAM(AssertEqualityComparer.EqComparerTypes)] T>(IEqualityComparer? innerComparer = null) =>
 			new AssertEqualityComparer<T?>(innerComparer);
 #else
 		static IEqualityComparer<T> GetEqualityComparer<T>(IEqualityComparer innerComparer = null) =>

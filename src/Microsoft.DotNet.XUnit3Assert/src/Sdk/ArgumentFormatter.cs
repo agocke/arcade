@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -295,6 +296,11 @@ namespace Xunit.Sdk
 		static string FormatComplexValue(
 			object value,
 			int depth,
+			[DynamicallyAccessedMembers(
+				DynamicallyAccessedMemberTypes.PublicProperties
+				| DynamicallyAccessedMemberTypes.NonPublicProperties
+				| DynamicallyAccessedMemberTypes.PublicFields
+				| DynamicallyAccessedMemberTypes.NonPublicFields)]
 			Type type,
 			bool isAnonymousType)
 		{
@@ -353,6 +359,7 @@ namespace Xunit.Sdk
 
 			var result = new StringBuilder();
 
+#if !XUNIT_AOT
 			var groupingTypes = GetGroupingTypes(enumerable);
 			if (groupingTypes != null)
 			{
@@ -361,6 +368,9 @@ namespace Xunit.Sdk
 				result.AppendFormat(CultureInfo.CurrentCulture, "[{0}] = ", key?.ToString() ?? "null");
 			}
 			else if (!SafeToMultiEnumerate(enumerable))
+#else
+			if (!SafeToMultiEnumerate(enumerable))
+#endif
 				return EllipsisInBrackets;
 
 			// This should only be used on values that are known to be re-enumerable
@@ -523,6 +533,7 @@ namespace Xunit.Sdk
 			object value,
 			Type type)
 		{
+#if !XUNIT_AOT
 			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
 			{
 				var k = type.GetProperty("Key")?.GetValue(value, null);
@@ -530,6 +541,7 @@ namespace Xunit.Sdk
 
 				return string.Format(CultureInfo.CurrentCulture, "[{0}] = {1}", Format(k), Format(v));
 			}
+#endif
 
 			return Convert.ToString(value, CultureInfo.CurrentCulture) ?? "null";
 		}
@@ -599,6 +611,7 @@ namespace Xunit.Sdk
 
 		static bool IsEnumerableOfGrouping(IEnumerable collection)
 		{
+#if !XUNIT_AOT
 			var genericEnumerableType =
 				(from @interface in collection.GetType().GetInterfaces()
 				 where @interface.IsGenericType
@@ -614,6 +627,9 @@ namespace Xunit.Sdk
 					.GetInterfaces()
 					.Concat(new[] { genericEnumerableType })
 					.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IGrouping<,>));
+#else
+			return false;
+#endif
 		}
 
 		static bool IsSZArrayType(this Type type) =>

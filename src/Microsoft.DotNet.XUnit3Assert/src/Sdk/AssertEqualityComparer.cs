@@ -22,18 +22,21 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using DAM = System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute;
 
 #if XUNIT_NULLABLE
-using System.Diagnostics.CodeAnalysis;
+//using System.Diagnostics.CodeAnalysis;
 #endif
 
 namespace Xunit.Sdk
 {
 	static class AssertEqualityComparer
 	{
+#if !XUNIT_AOT
 		static readonly ConcurrentDictionary<Type, IEqualityComparer> cachedDefaultComparers = new ConcurrentDictionary<Type, IEqualityComparer>();
 		static readonly ConcurrentDictionary<Type, IEqualityComparer> cachedDefaultInnerComparers = new ConcurrentDictionary<Type, IEqualityComparer>();
 #if XUNIT_NULLABLE
@@ -89,6 +92,7 @@ namespace Xunit.Sdk
 
 				return GetDefaultComparer(innerType);
 			});
+#endif // !XUNIT_AOT
 
 		/// <summary>
 		/// This exception is thrown when an operation failure has occured during equality comparison operations.
@@ -107,15 +111,29 @@ namespace Xunit.Sdk
 			public static OperationalFailureException ForIllegalGetHashCode() =>
 				new OperationalFailureException("During comparison of two collections, GetHashCode was called, but only a comparison function was provided. This typically indicates trying to compare two sets with an item comparison function, which is not supported. For more information, see https://xunit.net/docs/hash-sets-vs-linear-containers");
 		}
+
+		internal const DynamicallyAccessedMemberTypes EqComparerTypes =
+			DynamicallyAccessedMemberTypes.Interfaces
+			| DynamicallyAccessedMemberTypes.PublicFields
+			| DynamicallyAccessedMemberTypes.NonPublicFields
+			| DynamicallyAccessedMemberTypes.PublicProperties
+			| DynamicallyAccessedMemberTypes.NonPublicProperties
+			| DynamicallyAccessedMemberTypes.PublicMethods;
 	}
+
 
 	/// <summary>
 	/// Default implementation of <see cref="IAssertEqualityComparer{T}" /> used by the assertion library.
 	/// </summary>
 	/// <typeparam name="T">The type that is being compared.</typeparam>
-	sealed class AssertEqualityComparer<T> : IAssertEqualityComparer<T>
+	sealed class AssertEqualityComparer<
+		[DynamicallyAccessedMembers(AssertEqualityComparer.EqComparerTypes)] T> : IAssertEqualityComparer<T>
 	{
+#if XUNIT_AOT
+		internal static readonly IEqualityComparer DefaultInnerComparer = new AssertEqualityComparerAdapter<object>(new AssertEqualityComparer<object>());
+#else
 		internal static readonly IEqualityComparer DefaultInnerComparer = AssertEqualityComparer.GetDefaultInnerComparer(typeof(T));
+#endif
 
 		static readonly ConcurrentDictionary<Type, Type> cacheOfIComparableOfT = new ConcurrentDictionary<Type, Type>();
 		static readonly ConcurrentDictionary<Type, Type> cacheOfIEquatableOfT = new ConcurrentDictionary<Type, Type>();
@@ -193,6 +211,7 @@ namespace Xunit.Sdk
 				if (x is IEquatable<T> equatable)
 					return AssertEqualityResult.ForResult(equatable.Equals(y), x, y);
 
+#if !XUNIT_AOT
 				// Implements IEquatable<typeof(y)>?
 				if (xType != yType)
 				{
@@ -210,6 +229,7 @@ namespace Xunit.Sdk
 #endif
 					}
 				}
+#endif // !XUNIT_AOT
 			}
 
 			// Special case collections (before IStructuralEquatable because arrays implement that in a way we don't want to call)
@@ -233,7 +253,9 @@ namespace Xunit.Sdk
 					// If this happens, just swallow up the exception and continue comparing.
 				}
 
+#if !XUNIT_AOT
 			// Implements IComparable<typeof(y)>?
+			// Not supported on AOT due to MakeGenericType
 			if (xType != yType)
 			{
 				var icomparableY = cacheOfIComparableOfT.GetOrAdd(yType, (t) => typeof(IComparable<>).MakeGenericType(t));
@@ -259,6 +281,7 @@ namespace Xunit.Sdk
 					}
 				}
 			}
+#endif // !XUNIT_AOT
 
 			// Implements IComparable?
 			if (x is IComparable comparable)
@@ -279,8 +302,13 @@ namespace Xunit.Sdk
 				yType.IsConstructedGenericType &&
 				yType.GetGenericTypeDefinition() == typeKeyValuePair)
 			{
+#if XUNIT_AOT
+				var xKey = typeof(T).GetRuntimeProperty("Key")?.GetValue(x);
+				var yKey = typeof(T).GetRuntimeProperty("Key")?.GetValue(y);
+#else
 				var xKey = xType.GetRuntimeProperty("Key")?.GetValue(x);
 				var yKey = yType.GetRuntimeProperty("Key")?.GetValue(y);
+#endif
 
 				if (xKey == null)
 				{
@@ -292,13 +320,22 @@ namespace Xunit.Sdk
 					var xKeyType = xKey.GetType();
 					var yKeyType = yKey?.GetType();
 
+#if XUNIT_AOT
+					var keyComparer = innerComparer.Value;
+#else
 					var keyComparer = AssertEqualityComparer.GetDefaultComparer(xKeyType == yKeyType ? xKeyType : typeof(object));
+#endif
 					if (!keyComparer.Equals(xKey, yKey))
 						return AssertEqualityResult.ForResult(false, x, y);
 				}
 
+#if XUNIT_AOT
+				var xValue = typeof(T).GetRuntimeProperty("Value")?.GetValue(x);
+				var yValue = typeof(T).GetRuntimeProperty("Value")?.GetValue(y);
+#else
 				var xValue = xType.GetRuntimeProperty("Value")?.GetValue(x);
 				var yValue = yType.GetRuntimeProperty("Value")?.GetValue(y);
+#endif
 
 				if (xValue == null)
 					return AssertEqualityResult.ForResult(yValue is null, x, y);
@@ -306,7 +343,11 @@ namespace Xunit.Sdk
 				var xValueType = xValue.GetType();
 				var yValueType = yValue?.GetType();
 
+#if XUNIT_AOT
+				var valueComparer = innerComparer.Value;
+#else
 				var valueComparer = AssertEqualityComparer.GetDefaultComparer(xValueType == yValueType ? xValueType : typeof(object));
+#endif
 				return AssertEqualityResult.ForResult(valueComparer.Equals(xValue, yValue), x, y);
 			}
 
@@ -375,11 +416,13 @@ namespace Xunit.Sdk
 				this.innerComparer = innerComparer;
 			}
 
+#if !XUNIT_AOT
 #if XUNIT_NULLABLE
 			static MethodInfo? s_equalsMethod;
 #else
 			static MethodInfo s_equalsMethod;
 #endif
+#endif // !XUNIT_AOT
 
 			public new bool Equals(
 #if XUNIT_NULLABLE
@@ -394,6 +437,10 @@ namespace Xunit.Sdk
 					return y == null;
 				if (y == null)
 					return false;
+
+#if XUNIT_AOT
+				return EqualsGeneric(x, y);
+#else
 
 				// Delegate checking of whether two objects are equal to AssertEqualityComparer.
 				// To get the best result out of AssertEqualityComparer, we attempt to specialize the
@@ -416,9 +463,10 @@ namespace Xunit.Sdk
 #else
 				return (bool)s_equalsMethod.MakeGenericMethod(objectType).Invoke(this, new object[] { x, y });
 #endif
+#endif // XUNIT_AOT
 			}
 
-			bool EqualsGeneric<U>(
+			bool EqualsGeneric<[DAM(AssertEqualityComparer.EqComparerTypes)] U>(
 				U x,
 				U y) =>
 					new AssertEqualityComparer<U>(innerComparer: innerComparer).Equals(x, y);

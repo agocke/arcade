@@ -29,10 +29,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using Xunit.Sdk;
-
-#if XUNIT_NULLABLE
 using System.Diagnostics.CodeAnalysis;
-#endif
+using System.Runtime.CompilerServices;
 
 #if NET8_0_OR_GREATER
 using System.Threading.Tasks;
@@ -70,7 +68,12 @@ namespace Xunit.Internal
 		static readonly ConcurrentDictionary<Type, Dictionary<string, Func<object, object>>> gettersByType = new ConcurrentDictionary<Type, Dictionary<string, Func<object, object>>>();
 #endif
 
-#if XUNIT_NULLABLE
+#if XUNIT_AOT
+		const string fileSystemInfoFqn = "System.IO.FileSystemInfo, System.Runtime";
+		static readonly Lazy<Type?> fileSystemInfoType = new Lazy<Type?>(() => Type.GetType("System.IO.FileSystemInfo"));
+		static readonly Lazy<PropertyInfo?> fileSystemInfoFullNameProperty = new Lazy<PropertyInfo?>(() => fileSystemInfoType.Value?.GetProperty("FullName"));
+
+#elif XUNIT_NULLABLE
 		static readonly Lazy<Type?> fileSystemInfoType = new Lazy<Type?>(() => GetTypeByName("System.IO.FileSystemInfo"));
 		static readonly Lazy<PropertyInfo?> fileSystemInfoFullNameProperty = new Lazy<PropertyInfo?>(() => fileSystemInfoType.Value?.GetProperty("FullName"));
 #else
@@ -90,11 +93,27 @@ namespace Xunit.Internal
 		static readonly IEqualityComparer<object> referenceEqualityComparer = new ReferenceEqualityComparer();
 
 #if XUNIT_NULLABLE
-		static Dictionary<string, Func<object?, object?>> GetGettersForType(Type type) =>
+		static Dictionary<string, Func<object?, object?>> GetGettersForType(
+			[DynamicallyAccessedMembers(
+				DynamicallyAccessedMemberTypes.PublicProperties
+				| DynamicallyAccessedMemberTypes.NonPublicProperties
+			)] Type type) =>
 #else
-		static Dictionary<string, Func<object, object>> GetGettersForType(Type type) =>
+		static Dictionary<string, Func<object, object>> GetGettersForType(
+			[DynamicallyAccessedMembers(
+				DynamicallyAccessedMemberTypes.PublicFields
+				| DynamicallyAccessedMemberTypes.NonPublicFields
+				| DynamicallyAccessedMemberTypes.PublicProperties
+				| DynamicallyAccessedMemberTypes.NonPublicProperties
+			)] Type type) =>
 #endif
-			gettersByType.GetOrAdd(type, _type =>
+			gettersByType.GetOrAdd(type,
+				([DynamicallyAccessedMembers(
+					DynamicallyAccessedMemberTypes.PublicProperties
+					| DynamicallyAccessedMemberTypes.NonPublicProperties
+					| DynamicallyAccessedMemberTypes.PublicFields
+					| DynamicallyAccessedMemberTypes.NonPublicFields
+				 )] _type) =>
 			{
 				var fieldGetters =
 					_type
@@ -150,6 +169,7 @@ namespace Xunit.Internal
 						.ToDictionary(g => g.name, g => g.getter);
 			});
 
+#if !XUNIT_AOT
 #if XUNIT_NULLABLE
 		static Type? GetTypeByName(string typeName)
 #else
@@ -172,6 +192,7 @@ namespace Xunit.Internal
 				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Fatal error: Exception occurred while trying to retrieve type '{0}'", typeName), ex);
 			}
 		}
+#endif // !XUNIT_AOT
 
 		internal static bool IsCompilerGenerated(Type type) =>
 			type.CustomAttributes.Any(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute");
@@ -360,6 +381,7 @@ namespace Xunit.Internal
 			}
 		}
 
+#if !XUNIT_AOT
 #if XUNIT_NULLABLE
 		static object? UnwrapLazy(
 			object? value,
@@ -390,6 +412,7 @@ namespace Xunit.Internal
 
 			return value;
 		}
+#endif // !XUNIT_AOT
 
 		/// <summary/>
 #if XUNIT_NULLABLE
@@ -438,9 +461,11 @@ namespace Xunit.Internal
 			if (depth > maxCompareDepth.Value)
 				return EquivalentException.ForExceededDepth(maxCompareDepth.Value, prefix);
 
+#if !XUNIT_AOT
 			// Unwrap Lazy<T>
 			expected = UnwrapLazy(expected, out var expectedType);
 			actual = UnwrapLazy(actual, out var actualType);
+#endif
 
 			// Check for null equivalence
 			if (expected == null)
@@ -451,6 +476,11 @@ namespace Xunit.Internal
 
 			if (actual == null)
 				return EquivalentException.ForMemberValueMismatch(expected, actual, prefix);
+
+#if XUNIT_AOT
+			var expectedType = expected.GetType();
+			var actualType = actual.GetType();
+#endif
 
 			// Check for identical references
 			if (ReferenceEquals(expected, actual))
@@ -489,6 +519,7 @@ namespace Xunit.Internal
 					return VerifyEquivalenceUri(expectedUri, actualUri, prefix);
 
 				// IGrouping<TKey,TValue> is special, since it implements IEnumerable<TValue>
+#if !XUNIT_AOT
 				var expectedGroupingTypes = ArgumentFormatter.GetGroupingTypes(expected);
 				if (expectedGroupingTypes != null)
 				{
@@ -496,6 +527,7 @@ namespace Xunit.Internal
 					if (actualGroupingTypes != null)
 						return VerifyEquivalenceGroupings(expected, expectedGroupingTypes, actual, actualGroupingTypes, strict);
 				}
+#endif
 
 				// Enumerables? Check equivalence of individual members
 				if (expected is IEnumerable enumerableExpected && actual is IEnumerable enumerableActual)
@@ -628,6 +660,7 @@ namespace Xunit.Internal
 			return VerifyEquivalenceReference(expectedAnonymous, actual, strict, prefix, expectedRefs, actualRefs, depth, exclusions);
 		}
 
+#if !XUNIT_AOT
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceGroupings(
 #else
@@ -664,6 +697,7 @@ namespace Xunit.Internal
 
 			return null;
 		}
+#endif // !XUNIT_AOT
 
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceIntrinsics(

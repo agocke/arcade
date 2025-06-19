@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit.Sdk;
+using DAM = System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute;
 
 namespace Xunit
 {
@@ -226,7 +227,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection</param>
 		/// <param name="collection">The collection to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static void Contains<T>(
+		public static void Contains<[DAM(AssertEqualityComparer.EqComparerTypes)] T>(
 			T expected,
 			IEnumerable<T> collection)
 		{
@@ -336,7 +337,7 @@ namespace Xunit
 		/// <param name="expected">The object that is expected not to be in the collection</param>
 		/// <param name="collection">The collection to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the collection</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DAM(AssertEqualityComparer.EqComparerTypes)] T>(
 			T expected,
 			IEnumerable<T> collection)
 		{
@@ -498,7 +499,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The function to compare two items for equality</param>
-		public static void Equal<T>(
+		public static void Equal<[DAM(AssertEqualityComparer.EqComparerTypes)] T>(
 #if XUNIT_NULLABLE
 			IEnumerable<T>? expected,
 			IEnumerable<T>? actual,
@@ -575,7 +576,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The function to compare two items for equality</param>
-		public static void NotEqual<T>(
+		public static void NotEqual<[DAM(AssertEqualityComparer.EqComparerTypes)] T>(
 #if XUNIT_NULLABLE
 			IEnumerable<T>? expected,
 			IEnumerable<T>? actual,

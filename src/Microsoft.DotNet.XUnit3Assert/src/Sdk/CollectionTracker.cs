@@ -93,7 +93,11 @@ namespace Xunit.Sdk
 			try
 			{
 				return
+#if XUNIT_AOT
+					CheckIfDictionariesAreEqual(x, y, itemComparer) ??
+#else
 					CheckIfDictionariesAreEqual(x, y) ??
+#endif
 					CheckIfSetsAreEqual(x, y, isDefaultItemComparer ? null : itemComparer) ??
 					CheckIfArraysAreEqual(x, y, itemComparer, isDefaultItemComparer) ??
 					CheckIfEnumerablesAreEqual(x, y, itemComparer, isDefaultItemComparer);
@@ -158,13 +162,27 @@ namespace Xunit.Sdk
 		}
 
 #if XUNIT_NULLABLE
+#if XUNIT_AOT
+		static AssertEqualityResult? CheckIfDictionariesAreEqual(
+			CollectionTracker? x,
+			CollectionTracker? y,
+			IEqualityComparer itemComparer)
+#else
 		static AssertEqualityResult? CheckIfDictionariesAreEqual(
 			CollectionTracker? x,
 			CollectionTracker? y)
+#endif
+#else
+#if XUNIT_AOT
+		static AssertEqualityResult CheckIfDictionariesAreEqual(
+			CollectionTracker x,
+			CollectionTracker y,
+			IEqualityComparer itemComparer)
 #else
 		static AssertEqualityResult CheckIfDictionariesAreEqual(
 			CollectionTracker x,
 			CollectionTracker y)
+#endif
 #endif
 		{
 			if (x == null || y == null)
@@ -203,8 +221,11 @@ namespace Xunit.Sdk
 				{
 					var valueXType = valueX.GetType();
 					var valueYType = valueY.GetType();
-
+#if XUNIT_AOT
+					var comparer = itemComparer;
+#else
 					var comparer = AssertEqualityComparer.GetDefaultComparer(valueXType == valueYType ? valueXType : typeof(object));
+#endif
 					if (!comparer.Equals(valueX, valueY))
 						return AssertEqualityResult.ForResult(false, x.InnerEnumerable, y.InnerEnumerable);
 				}
@@ -231,6 +252,7 @@ namespace Xunit.Sdk
 			if (y == null)
 				return AssertEqualityResult.ForResult(false, x.InnerEnumerable, null);
 
+#if !XUNIT_AOT
 			var assertQualityComparererType =
 				itemComparer
 					.GetType()
@@ -238,6 +260,7 @@ namespace Xunit.Sdk
 					.FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAssertEqualityComparer<>));
 			var comparisonType = assertQualityComparererType?.GenericTypeArguments[0];
 			var equalsMethod = assertQualityComparererType?.GetMethod("Equals");
+#endif
 
 			var enumeratorX = x.GetSafeEnumerator();
 			var enumeratorY = y.GetSafeEnumerator();
@@ -269,6 +292,7 @@ namespace Xunit.Sdk
 						}
 						else
 						{
+#if !XUNIT_AOT
 							var assertEqualityResult = default(AssertEqualityResult);
 							if (comparisonType?.IsAssignableFrom(xCurrent?.GetType()) == true && comparisonType?.IsAssignableFrom(yCurrent?.GetType()) == true)
 								assertEqualityResult = equalsMethod?.Invoke(itemComparer, new[] { xCurrent, null, yCurrent, null }) as AssertEqualityResult;
@@ -278,8 +302,14 @@ namespace Xunit.Sdk
 								if (!assertEqualityResult.Equal)
 									return AssertEqualityResult.ForMismatch(x.InnerEnumerable, y.InnerEnumerable, mismatchIndex, innerResult: assertEqualityResult);
 							}
-							else if (!itemComparer.Equals(xCurrent, yCurrent))
-								return AssertEqualityResult.ForMismatch(x.InnerEnumerable, y.InnerEnumerable, mismatchIndex);
+							else
+							{
+#endif // !XUNIT_AOT
+								if (!itemComparer.Equals(xCurrent, yCurrent))
+									return AssertEqualityResult.ForMismatch(x.InnerEnumerable, y.InnerEnumerable, mismatchIndex);
+#if !XUNIT_AOT
+							}
+#endif // !XUNIT_AOT
 						}
 					}
 					catch (Exception ex)
@@ -316,13 +346,29 @@ namespace Xunit.Sdk
 			if (elementTypeX != elementTypeY)
 				return AssertEqualityResult.ForResult(false, x.InnerEnumerable, y.InnerEnumerable);
 
+#if XUNIT_AOT
+			// Can't use MakeGenericType in AOT
+			return AssertEqualityResult.ForResult(CompareUntypedSets(x.InnerEnumerable, y.InnerEnumerable), x.InnerEnumerable, y.InnerEnumerable);
+#else
 			var genericCompareMethod = openGenericCompareTypedSetsMethod.MakeGenericMethod(elementTypeX);
 #if XUNIT_NULLABLE
 			return AssertEqualityResult.ForResult((bool)genericCompareMethod.Invoke(null, new object?[] { x.InnerEnumerable, y.InnerEnumerable, itemComparer })!, x.InnerEnumerable, y.InnerEnumerable);
 #else
 			return AssertEqualityResult.ForResult((bool)genericCompareMethod.Invoke(null, new object[] { x.InnerEnumerable, y.InnerEnumerable, itemComparer }), x.InnerEnumerable, y.InnerEnumerable);
 #endif
+#endif // XUNIT_AOT
 		}
+
+		static bool CompareUntypedSets(
+			IEnumerable enumX,
+			IEnumerable enumY)
+		{
+			var setX = new HashSet<object>(enumX.Cast<object>());
+			var setY = new HashSet<object>(enumY.Cast<object>());
+
+			return setX.SetEquals(setY);
+		}
+
 
 		static bool CompareTypedSets<T>(
 			ISet<T> setX,
