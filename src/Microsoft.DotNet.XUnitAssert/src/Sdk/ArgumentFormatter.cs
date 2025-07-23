@@ -201,7 +201,6 @@ namespace Xunit.Sdk
 		/// <param name="value">The value to be formatted</param>
 		/// <param name="depth">The optional printing depth (1 indicates a top-level value)</param>
 		[DynamicDependency("ToString", typeof(object))]
-		[UnconditionalSuppressMessage("ReflectionAnalysis", "IL2072", Justification = "We can't easily annotate callers of this type to require them to preserve the ToString method as we need to use the runtime type. We also can't preserve all of the properties and fields for the complex type printing, but any members that are trimmed aren't used and thus don't contribute to the asserts.")]
 		public static string Format<
 			[DynamicallyAccessedMembers(
 				DynamicallyAccessedMemberTypes.PublicFields |
@@ -537,7 +536,6 @@ namespace Xunit.Sdk
 
 		[DynamicDependency(DynamicallyAccessedMemberTypes.PublicProperties, typeof(KeyValuePair<,>))]
 		[DynamicDependency("ToString", typeof(object))]
-		[UnconditionalSuppressMessage("ReflectionAnalysis", "IL2070", Justification = "We can't easily annotate callers of this type to require them to preserve properties for the one type we need or the ToString method as we need to use the runtime type")]
 		static string FormatValueTypeValue(
 			object value,
 			TypeInfo typeInfo)
@@ -573,7 +571,6 @@ namespace Xunit.Sdk
 #endif
 
 		[DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ISet<>))]
-		[UnconditionalSuppressMessage("ReflectionAnalysis", "IL2075", Justification = "We can't easily annotate callers of this type to require them to preserve interfaces, so just preserve the one interface that's checked for.")]
 #if XUNIT_NULLABLE
 		internal static Type? GetSetElementType(object? obj)
 #else

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>$(NetMinimum)</TargetFramework>
+    <TargetFrameworks>$(NetCurrent);$(NetMinimum)</TargetFrameworks>
     <AssemblyName>xunit.assert</AssemblyName>
     <PackageId>$(MSBuildProjectName)</PackageId>
     <ImplicitUsings>enable</ImplicitUsings>

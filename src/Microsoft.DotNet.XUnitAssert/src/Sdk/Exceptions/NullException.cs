@@ -61,8 +61,6 @@ namespace Xunit.Sdk
 		/// when the given value was unexpectedly not null.
 		/// </summary>
 		/// <param name="actual">The actual non-<c>null</c> value</param>
-		[UnconditionalSuppressMessage("ReflectionAnalysis", "IL2019:Mismatched constraints",
-						Justification = "Assert.GuardArgumentNotNull returns the same type passed in, so the annotations on the T type parameter will work")]
 		public static NullException ForNonNullValue<[DynamicallyAccessedMembers(
 					DynamicallyAccessedMemberTypes.PublicFields
 					| DynamicallyAccessedMemberTypes.NonPublicFields

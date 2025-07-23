@@ -301,8 +301,6 @@ namespace Xunit
 		[DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ISet<>))]
 		[DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Dictionary<,>))]
 		[DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(HashSet<>))]
-		[UnconditionalSuppressMessage("ReflectionAnalysis", "IL2072", Justification = "We only check for the types listed above.")]
-		[UnconditionalSuppressMessage("ReflectionAnalysis", "IL2075", Justification = "We only check for the types listed above.")]
 #if XUNIT_NULLABLE
 		private static string? GetCollectionDisplay(object? expected, object? actual)
 #else
