@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using Xunit.Sdk;
 
 namespace Xunit
@@ -27,7 +28,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			ISet<T> set)
 		{
@@ -50,7 +51,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			IReadOnlySet<T> set)
 		{
@@ -73,7 +74,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			HashSet<T> set) =>
 				Contains(expected, (ISet<T>)set);
@@ -85,7 +86,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			SortedSet<T> set) =>
 				Contains(expected, (ISet<T>)set);
@@ -97,7 +98,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			ImmutableHashSet<T> set) =>
 				Contains(expected, (ISet<T>)set);
@@ -109,7 +110,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			ImmutableSortedSet<T> set) =>
 				Contains(expected, (ISet<T>)set);
@@ -121,7 +122,7 @@ namespace Xunit
 		/// <param name="expected">The object that is expected not to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the set</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			ISet<T> set)
 		{
@@ -143,7 +144,7 @@ namespace Xunit
 		/// <param name="expected">The object that is expected not to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the collection</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			IReadOnlySet<T> set)
 		{
@@ -165,7 +166,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			HashSet<T> set) =>
 				DoesNotContain(expected, (ISet<T>)set);
@@ -177,7 +178,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			SortedSet<T> set) =>
 				DoesNotContain(expected, (ISet<T>)set);
@@ -189,7 +190,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			ImmutableHashSet<T> set) =>
 				DoesNotContain(expected, (ISet<T>)set);
@@ -201,7 +202,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 			T expected,
 			ImmutableSortedSet<T> set) =>
 				DoesNotContain(expected, (ISet<T>)set);

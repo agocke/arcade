@@ -9,11 +9,8 @@
 #pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
 #endif
 
-using Xunit.Sdk;
-
-#if XUNIT_NULLABLE
 using System.Diagnostics.CodeAnalysis;
-#endif
+using Xunit.Sdk;
 
 namespace Xunit
 {
@@ -98,7 +95,7 @@ namespace Xunit
 		/// </summary>
 		/// <param name="value">The value to be inspected</param>
 		/// <exception cref="NullException">Thrown when the value is not null</exception>
-		public static void Null<T>(T? value)
+		public static void Null<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(T? value)
 			where T : struct
 		{
 			if (value.HasValue)

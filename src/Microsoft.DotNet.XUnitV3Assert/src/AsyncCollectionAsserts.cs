@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Xunit.Internal;
 using Xunit.Sdk;
@@ -107,7 +108,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection</param>
 		/// <param name="collection">The collection to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
 			T expected,
 			IAsyncEnumerable<T> collection) =>
 				Contains(expected, AssertHelper.ToEnumerable(collection));
@@ -120,7 +121,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="comparer">The comparer used to equate objects in the collection with the expected object</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
 			T expected,
 			IAsyncEnumerable<T> collection,
 			IEqualityComparer<T> comparer) =>
@@ -144,7 +145,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the object to be compared</typeparam>
 		/// <param name="collection">The collection to be inspected</param>
 		/// <exception cref="DistinctException">Thrown when an object is present inside the collection more than once</exception>
-		public static void Distinct<T>(IAsyncEnumerable<T> collection) =>
+		public static void Distinct<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(IAsyncEnumerable<T> collection) =>
 			Distinct(AssertHelper.ToEnumerable(collection), EqualityComparer<T>.Default);
 
 		/// <summary>
@@ -154,7 +155,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="comparer">The comparer used to equate objects in the collection with the expected object</param>
 		/// <exception cref="DistinctException">Thrown when an object is present inside the collection more than once</exception>
-		public static void Distinct<T>(
+		public static void Distinct<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			IEqualityComparer<T> comparer) =>
 				Distinct(AssertHelper.ToEnumerable(collection), comparer);
@@ -166,7 +167,7 @@ namespace Xunit
 		/// <param name="expected">The object that is expected not to be in the collection</param>
 		/// <param name="collection">The collection to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the collection</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
 			T expected,
 			IAsyncEnumerable<T> collection) =>
 				DoesNotContain(expected, AssertHelper.ToEnumerable(collection));
@@ -179,7 +180,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="comparer">The comparer used to equate objects in the collection with the expected object</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the collection</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
 			T expected,
 			IAsyncEnumerable<T> collection,
 			IEqualityComparer<T> comparer) =>
@@ -213,7 +214,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <exception cref="EqualException">Thrown when the objects are not equal</exception>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			IEnumerable<T>? expected,
 			IAsyncEnumerable<T>? actual) =>
@@ -230,7 +231,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <exception cref="EqualException">Thrown when the objects are not equal</exception>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			IAsyncEnumerable<T>? expected,
 			IAsyncEnumerable<T>? actual) =>
@@ -286,7 +287,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The function to compare two items for equality</param>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			IEnumerable<T>? expected,
 			IAsyncEnumerable<T>? actual,
@@ -305,7 +306,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The function to compare two items for equality</param>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			IAsyncEnumerable<T>? expected,
 			IAsyncEnumerable<T>? actual,
@@ -332,7 +333,7 @@ namespace Xunit
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
 		/// <exception cref="NotEqualException">Thrown when the objects are equal</exception>
-		public static void NotEqual<T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			IEnumerable<T>? expected,
 			IAsyncEnumerable<T>? actual) =>
@@ -349,7 +350,7 @@ namespace Xunit
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
 		/// <exception cref="NotEqualException">Thrown when the objects are equal</exception>
-		public static void NotEqual<T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			IAsyncEnumerable<T>? expected,
 			IAsyncEnumerable<T>? actual) =>
@@ -405,7 +406,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The function to compare two items for equality</param>
-		public static void NotEqual<T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			IEnumerable<T>? expected,
 			IAsyncEnumerable<T>? actual,
@@ -424,7 +425,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The function to compare two items for equality</param>
-		public static void NotEqual<T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			IAsyncEnumerable<T>? expected,
 			IAsyncEnumerable<T>? actual,

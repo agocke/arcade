@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -179,11 +180,21 @@ namespace Xunit.Sdk
 			return builder.ToString();
 		}
 
+		public static string Format(Type t)
+        {
+			return string.Format(CultureInfo.CurrentCulture, "typeof({0})", FormatTypeName(t, fullTypeName: true));
+        }
+
 		/// <summary>
 		/// Formats a value for display.
 		/// </summary>
 		/// <param name="value">The value to be formatted</param>
 		/// <param name="depth">The optional printing depth (1 indicates a top-level value)</param>
+#if XUNIT_AOT
+		public static string Format<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
+			T value,
+			int depth = 1)
+#else
 		public static string Format(
 #if XUNIT_NULLABLE
 			object? value,
@@ -191,6 +202,7 @@ namespace Xunit.Sdk
 			object value,
 #endif
 			int depth = 1)
+#endif
 		{
 			if (value == null)
 				return "null";
@@ -227,7 +239,12 @@ namespace Xunit.Sdk
 				if (value is IEnumerable enumerable)
 					return FormatEnumerableValue(enumerable, depth);
 
-				var type = value.GetType();
+				var type =
+#if XUNIT_AOT
+					typeof(T);
+#else
+					value.GetType();
+#endif
 
 #if NET8_0_OR_GREATER
 				if (value is ITuple tuple)

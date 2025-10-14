@@ -113,7 +113,7 @@ namespace Xunit.Sdk
 	/// Default implementation of <see cref="IAssertEqualityComparer{T}" /> used by the assertion library.
 	/// </summary>
 	/// <typeparam name="T">The type that is being compared.</typeparam>
-	sealed class AssertEqualityComparer<T> : IAssertEqualityComparer<T>
+	sealed class AssertEqualityComparer<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T> : IAssertEqualityComparer<T>
 	{
 		internal static readonly IEqualityComparer DefaultInnerComparer = AssertEqualityComparer.GetDefaultInnerComparer(typeof(T));
 
@@ -182,8 +182,18 @@ namespace Xunit.Sdk
 			if (x is string xString && y is string yString)
 				return StringAssertEqualityComparer.Equivalent(xString, yString);
 
-			var xType = x.GetType();
-			var yType = y.GetType();
+			var xType =
+#if XUNIT_AOT
+				typeof(T);
+#else
+				x.GetType();
+#endif
+			var yType =
+#if XUNIT_AOT
+				typeof(T);
+#else
+				y.GetType();
+#endif
 
 			// ImmutableArray<T> defines IEquatable<ImmutableArray<T>> in a way that isn't consistent with the
 			// needs of an assertion library. https://github.com/xunit/xunit/issues/3137
@@ -193,6 +203,7 @@ namespace Xunit.Sdk
 				if (x is IEquatable<T> equatable)
 					return AssertEqualityResult.ForResult(equatable.Equals(y), x, y);
 
+#if !XUNIT_AOT // This requires MakeGenericType which isn't AOT compatible
 				// Implements IEquatable<typeof(y)>?
 				if (xType != yType)
 				{
@@ -210,6 +221,7 @@ namespace Xunit.Sdk
 #endif
 					}
 				}
+#endif
 			}
 
 			// Special case collections (before IStructuralEquatable because arrays implement that in a way we don't want to call)
@@ -233,6 +245,7 @@ namespace Xunit.Sdk
 					// If this happens, just swallow up the exception and continue comparing.
 				}
 
+#if !XUNIT_AOT // This requires MakeGenericType which isn't AOT compatible
 			// Implements IComparable<typeof(y)>?
 			if (xType != yType)
 			{
@@ -259,6 +272,7 @@ namespace Xunit.Sdk
 					}
 				}
 			}
+#endif
 
 			// Implements IComparable?
 			if (x is IComparable comparable)
@@ -289,8 +303,18 @@ namespace Xunit.Sdk
 				}
 				else
 				{
-					var xKeyType = xKey.GetType();
-					var yKeyType = yKey?.GetType();
+					var xKeyType =
+#if XUNIT_AOT
+						typeof(T);
+#else
+						xKey.GetType();
+#endif
+					var yKeyType =
+#if XUNIT_AOT
+						typeof(T);
+#else
+						yKey?.GetType();
+#endif
 
 					var keyComparer = AssertEqualityComparer.GetDefaultComparer(xKeyType == yKeyType ? xKeyType : typeof(object));
 					if (!keyComparer.Equals(xKey, yKey))
@@ -303,8 +327,18 @@ namespace Xunit.Sdk
 				if (xValue == null)
 					return AssertEqualityResult.ForResult(yValue is null, x, y);
 
-				var xValueType = xValue.GetType();
-				var yValueType = yValue?.GetType();
+				var xValueType =
+#if XUNIT_AOT
+					typeof(T);
+#else
+					xValue.GetType();
+#endif
+				var yValueType =
+#if XUNIT_AOT
+					typeof(T);
+#else
+					yValue?.GetType();
+#endif
 
 				var valueComparer = AssertEqualityComparer.GetDefaultComparer(xValueType == yValueType ? xValueType : typeof(object));
 				return AssertEqualityResult.ForResult(valueComparer.Equals(xValue, yValue), x, y);
@@ -375,10 +409,12 @@ namespace Xunit.Sdk
 				this.innerComparer = innerComparer;
 			}
 
+#if !XUNIT_AOT
 #if XUNIT_NULLABLE
 			static MethodInfo? s_equalsMethod;
 #else
 			static MethodInfo s_equalsMethod;
+#endif
 #endif
 
 			public new bool Equals(
@@ -394,6 +430,10 @@ namespace Xunit.Sdk
 					return y == null;
 				if (y == null)
 					return false;
+
+#if XUNIT_AOT // in AOT only thing we can do is call object.Equals
+				return x.Equals(y);
+#else
 
 				// Delegate checking of whether two objects are equal to AssertEqualityComparer.
 				// To get the best result out of AssertEqualityComparer, we attempt to specialize the
@@ -416,9 +456,10 @@ namespace Xunit.Sdk
 #else
 				return (bool)s_equalsMethod.MakeGenericMethod(objectType).Invoke(this, new object[] { x, y });
 #endif
+#endif // !XUNIT_AOT
 			}
 
-			bool EqualsGeneric<U>(
+			bool EqualsGeneric<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] U>(
 				U x,
 				U y) =>
 					new AssertEqualityComparer<U>(innerComparer: innerComparer).Equals(x, y);

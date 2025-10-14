@@ -231,6 +231,7 @@ namespace Xunit.Sdk
 			if (y == null)
 				return AssertEqualityResult.ForResult(false, x.InnerEnumerable, null);
 
+#if !XUNIT_AOT
 			var assertQualityComparererType =
 				itemComparer
 					.GetType()
@@ -238,6 +239,7 @@ namespace Xunit.Sdk
 					.FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAssertEqualityComparer<>));
 			var comparisonType = assertQualityComparererType?.GenericTypeArguments[0];
 			var equalsMethod = assertQualityComparererType?.GetMethod("Equals");
+#endif
 
 			var enumeratorX = x.GetSafeEnumerator();
 			var enumeratorY = y.GetSafeEnumerator();
@@ -270,8 +272,10 @@ namespace Xunit.Sdk
 						else
 						{
 							var assertEqualityResult = default(AssertEqualityResult);
+#if !XUNIT_AOT
 							if (comparisonType?.IsAssignableFrom(xCurrent?.GetType()) == true && comparisonType?.IsAssignableFrom(yCurrent?.GetType()) == true)
 								assertEqualityResult = equalsMethod?.Invoke(itemComparer, new[] { xCurrent, null, yCurrent, null }) as AssertEqualityResult;
+#endif
 
 							if (assertEqualityResult != null)
 							{

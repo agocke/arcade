@@ -9,6 +9,7 @@
 #endif
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace Xunit.Sdk
@@ -47,7 +48,7 @@ namespace Xunit.Sdk
 		/// </summary>
 		/// <param name="type">The inner type of the value</param>
 		/// <param name="actual">The actual non-<c>null</c> value</param>
-		public static Exception ForNonNullStruct<T>(
+		public static Exception ForNonNullStruct<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
 			Type type,
 			T? actual)
 				where T : struct =>

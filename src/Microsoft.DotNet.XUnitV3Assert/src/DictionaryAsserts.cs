@@ -12,6 +12,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Xunit.Sdk;
 
 namespace Xunit
@@ -32,7 +33,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <returns>The value associated with <paramref name="expected"/>.</returns>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static TValue Contains<TKey, TValue>(
+		public static TValue Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			IDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -60,7 +61,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <returns>The value associated with <paramref name="expected"/>.</returns>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static TValue Contains<TKey, TValue>(
+		public static TValue Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			IReadOnlyDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -88,7 +89,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <returns>The value associated with <paramref name="expected"/>.</returns>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static TValue Contains<TKey, TValue>(
+		public static TValue Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			ConcurrentDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -105,7 +106,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <returns>The value associated with <paramref name="expected"/>.</returns>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static TValue Contains<TKey, TValue>(
+		public static TValue Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			Dictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -122,7 +123,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <returns>The value associated with <paramref name="expected"/>.</returns>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static TValue Contains<TKey, TValue>(
+		public static TValue Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			ReadOnlyDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -139,7 +140,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <returns>The value associated with <paramref name="expected"/>.</returns>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static TValue Contains<TKey, TValue>(
+		public static TValue Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			ImmutableDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -155,7 +156,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection.</param>
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present in the collection</exception>
-		public static void DoesNotContain<TKey, TValue>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			IDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -181,7 +182,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection.</param>
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present in the collection</exception>
-		public static void DoesNotContain<TKey, TValue>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			IReadOnlyDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -207,7 +208,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection.</param>
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present in the collection</exception>
-		public static void DoesNotContain<TKey, TValue>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			ConcurrentDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -223,7 +224,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection.</param>
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present in the collection</exception>
-		public static void DoesNotContain<TKey, TValue>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			Dictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -239,7 +240,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection.</param>
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present in the collection</exception>
-		public static void DoesNotContain<TKey, TValue>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			ReadOnlyDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE
@@ -255,7 +256,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection.</param>
 		/// <param name="collection">The collection to be inspected.</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present in the collection</exception>
-		public static void DoesNotContain<TKey, TValue>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] TKey, TValue>(
 			TKey expected,
 			ImmutableDictionary<TKey, TValue> collection)
 #if XUNIT_NULLABLE

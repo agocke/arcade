@@ -35,6 +35,11 @@ namespace Xunit
 		static readonly Type typeofHashSet = typeof(HashSet<>);
 		static readonly Type typeofSet = typeof(ISet<>);
 
+		internal const DynamicallyAccessedMemberTypes EqualityAnnotations =
+			DynamicallyAccessedMemberTypes.Interfaces
+			| DynamicallyAccessedMemberTypes.PublicMethods
+			| DynamicallyAccessedMemberTypes.PublicProperties;
+
 		/// <summary>
 		/// Verifies that two arrays of un-managed type T are equal, using Span&lt;T&gt;.SequenceEqual.
 		/// This can be significantly faster than generic enumerables, when the collections are actually
@@ -73,7 +78,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the objects to be compared</typeparam>
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual) =>
@@ -90,7 +95,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The comparer used to compare the two objects</param>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual,
@@ -108,7 +113,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The comparer used to compare the two objects</param>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual,
@@ -256,11 +261,22 @@ namespace Xunit
 					string collectionDisplay = null;
 #endif
 
-					var expectedType = expected?.GetType();
+					var expectedType =
+#if XUNIT_AOT
+						typeof(T);
+#else
+						expected?.GetType();
+#endif
+
 					var expectedTypeDefinition = SafeGetGenericTypeDefinition(expectedType);
 					var expectedInterfaceTypeDefinitions = expectedType?.GetInterfaces().Where(i => i.IsGenericType).Select(i => i.GetGenericTypeDefinition());
 
-					var actualType = actual?.GetType();
+					var actualType =
+#if XUNIT_AOT
+						typeof(T);
+#else
+						actual?.GetType();
+#endif
 					var actualTypeDefinition = SafeGetGenericTypeDefinition(actualType);
 					var actualInterfaceTypeDefinitions = actualType?.GetInterfaces().Where(i => i.IsGenericType).Select(i => i.GetGenericTypeDefinition());
 
@@ -563,7 +579,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the objects to be compared</typeparam>
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
-		public static void NotEqual<T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual) =>
@@ -580,7 +596,7 @@ namespace Xunit
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
 		/// <param name="comparer">The comparer used to examine the objects</param>
-		public static void NotEqual<T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual,
@@ -598,7 +614,7 @@ namespace Xunit
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
 		/// <param name="comparer">The comparer used to examine the objects</param>
-		public static void NotEqual<T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual,
@@ -731,11 +747,21 @@ namespace Xunit
 					string collectionDisplay = null;
 #endif
 
-					var expectedType = expected?.GetType();
+					var expectedType =
+#if XUNIT_AOT
+						typeof(T);
+#else
+						expected?.GetType();
+#endif
 					var expectedTypeDefinition = SafeGetGenericTypeDefinition(expectedType);
 					var expectedInterfaceTypeDefinitions = expectedType?.GetInterfaces().Where(i => i.IsGenericType).Select(i => i.GetGenericTypeDefinition());
 
-					var actualType = actual?.GetType();
+					var actualType =
+#if XUNIT_AOT
+						typeof(T);
+#else
+						actual?.GetType();
+#endif
 					var actualTypeDefinition = SafeGetGenericTypeDefinition(actualType);
 					var actualInterfaceTypeDefinitions = actualType?.GetInterfaces().Where(i => i.IsGenericType).Select(i => i.GetGenericTypeDefinition());
 
@@ -944,7 +970,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the objects to be compared</typeparam>
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
-		public static void NotStrictEqual<T>(
+		public static void NotStrictEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual)
@@ -968,7 +994,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the objects to be compared</typeparam>
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
-		public static void StrictEqual<T>(
+		public static void StrictEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual)

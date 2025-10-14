@@ -680,6 +680,7 @@ namespace Xunit.Internal
 			return VerifyEquivalenceReference(expectedAnonymous, actual, strict, prefix, expectedRefs, actualRefs, depth, exclusions);
 		}
 
+#if !XUNIT_AOT // Equivalence requires AOT-incompatible reflection
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceGroupings(
 #else
@@ -716,6 +717,7 @@ namespace Xunit.Internal
 
 			return null;
 		}
+#endif
 
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceIntrinsics(
