@@ -8,6 +8,7 @@
 #endif
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Xunit.Internal;
 
@@ -36,6 +37,8 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The actual value</param>
 		/// <param name="strict">A flag which enables strict comparison mode</param>
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 		public static void Equivalent(
 #if XUNIT_NULLABLE
 			object? expected,
@@ -62,6 +65,8 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The actual value</param>
 		/// <param name="exclusionExpressions">The expressions for exclusions</param>
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 		public static void EquivalentWithExclusions<T>(
 #if XUNIT_NULLABLE
 			object? expected,
@@ -95,6 +100,8 @@ namespace Xunit
 		/// <param name="actual">The actual value</param>
 		/// <param name="strict">A flag which enables strict comparison mode</param>
 		/// <param name="exclusionExpressions">The expressions for exclusions</param>
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 		public static void EquivalentWithExclusions<T>(
 #if XUNIT_NULLABLE
 			object? expected,
@@ -128,6 +135,8 @@ namespace Xunit
 		/// <param name="actual">The actual value</param>
 		/// <param name="exclusionExpressions">The expressions for exclusions. This should be provided
 		/// in <c>"Member.SubMember.SubSubMember"</c> form for deep exclusions.</param>
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 		public static void EquivalentWithExclusions(
 #if XUNIT_NULLABLE
 			object? expected,
@@ -159,6 +168,8 @@ namespace Xunit
 		/// <param name="strict">A flag which enables strict comparison mode</param>
 		/// <param name="exclusionExpressions">The expressions for exclusions. This should be provided
 		/// in <c>"Member1.Member2.Member3"</c> form for deep exclusions.</param>
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 		public static void EquivalentWithExclusions(
 #if XUNIT_NULLABLE
 			object? expected,

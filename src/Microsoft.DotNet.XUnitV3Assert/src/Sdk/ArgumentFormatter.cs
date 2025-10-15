@@ -181,9 +181,11 @@ namespace Xunit.Sdk
 		}
 
 		public static string Format(Type t)
-        {
+		{
 			return string.Format(CultureInfo.CurrentCulture, "typeof({0})", FormatTypeName(t, fullTypeName: true));
-        }
+		}
+
+		internal const DynamicallyAccessedMemberTypes FormatAnnotations = FieldsAndProperties | DynamicallyAccessedMemberTypes.PublicMethods;
 
 		/// <summary>
 		/// Formats a value for display.
@@ -191,7 +193,7 @@ namespace Xunit.Sdk
 		/// <param name="value">The value to be formatted</param>
 		/// <param name="depth">The optional printing depth (1 indicates a top-level value)</param>
 #if XUNIT_AOT
-		public static string Format<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
+		public static string Format<[DynamicallyAccessedMembers(FormatAnnotations)] T>(
 			T value,
 			int depth = 1)
 #else
@@ -309,10 +311,16 @@ namespace Xunit.Sdk
 			return string.Format(CultureInfo.CurrentCulture, "0x{0:x4}", (int)value);
 		}
 
+		internal const DynamicallyAccessedMemberTypes FieldsAndProperties =
+			DynamicallyAccessedMemberTypes.PublicFields
+			| DynamicallyAccessedMemberTypes.PublicProperties
+			| DynamicallyAccessedMemberTypes.NonPublicFields
+			| DynamicallyAccessedMemberTypes.NonPublicProperties;
+
 		static string FormatComplexValue(
 			object value,
 			int depth,
-			Type type,
+			[DynamicallyAccessedMembers(FieldsAndProperties)] Type type,
 			bool isAnonymousType)
 		{
 			var typeName = isAnonymousType ? "" : type.Name + " ";
@@ -370,6 +378,7 @@ namespace Xunit.Sdk
 
 			var result = new StringBuilder();
 
+#if !XUNIT_AOT
 			var groupingTypes = GetGroupingTypes(enumerable);
 			if (groupingTypes != null)
 			{
@@ -377,7 +386,9 @@ namespace Xunit.Sdk
 				var key = groupingInterface.GetRuntimeProperty("Key")?.GetValue(enumerable);
 				result.AppendFormat(CultureInfo.CurrentCulture, "[{0}] = ", key?.ToString() ?? "null");
 			}
-			else if (!SafeToMultiEnumerate(enumerable))
+			else
+#endif
+			if (!SafeToMultiEnumerate(enumerable))
 				return EllipsisInBrackets;
 
 			// This should only be used on values that are known to be re-enumerable
@@ -538,7 +549,7 @@ namespace Xunit.Sdk
 
 		static string FormatValueTypeValue(
 			object value,
-			Type type)
+			[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type)
 		{
 			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
 			{
@@ -566,6 +577,7 @@ namespace Xunit.Sdk
 			return intValue;
 		}
 
+		[RequiresUnreferencedCode("Reflects on runtime type")]
 #if XUNIT_NULLABLE
 		internal static Type[]? GetGroupingTypes(object? obj)
 #else
@@ -583,6 +595,7 @@ namespace Xunit.Sdk
 				 select @interface).FirstOrDefault()?.GenericTypeArguments;
 		}
 
+		[RequiresUnreferencedCode("Reflects on implemented interfaces")]
 #if XUNIT_NULLABLE
 		internal static Type? GetSetElementType(object? obj)
 #else
@@ -614,6 +627,7 @@ namespace Xunit.Sdk
 #endif
 		}
 
+		[RequiresUnreferencedCode("Reflects on implemented interfaces")]
 		static bool IsEnumerableOfGrouping(IEnumerable collection)
 		{
 			var genericEnumerableType =
@@ -646,9 +660,12 @@ namespace Xunit.Sdk
 			collection is Array ||
 			collection is BitArray ||
 			collection is IList ||
-			collection is IDictionary ||
-			GetSetElementType(collection) != null ||
-			IsEnumerableOfGrouping(collection);
+			collection is IDictionary
+#if !XUNIT_AOT
+			|| GetSetElementType(collection) != null
+			|| IsEnumerableOfGrouping(collection)
+#endif
+			;
 
 		static bool TryGetEscapeSequence(
 			char ch,

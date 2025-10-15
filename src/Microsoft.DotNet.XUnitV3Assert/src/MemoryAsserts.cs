@@ -5,6 +5,7 @@
 #endif
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Xunit.Sdk;
 
 namespace Xunit
@@ -29,7 +30,7 @@ namespace Xunit
 		/// <param name="expectedSubMemory">The sub-Memory expected to be in the Memory</param>
 		/// <param name="actualMemory">The Memory to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the sub-Memory is not present inside the Memory</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Memory<T> expectedSubMemory,
 			Memory<T> actualMemory)
 				where T : IEquatable<T> =>
@@ -41,7 +42,7 @@ namespace Xunit
 		/// <param name="expectedSubMemory">The sub-Memory expected to be in the Memory</param>
 		/// <param name="actualMemory">The Memory to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the sub-Memory is not present inside the Memory</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Memory<T> expectedSubMemory,
 			ReadOnlyMemory<T> actualMemory)
 				where T : IEquatable<T> =>
@@ -53,7 +54,7 @@ namespace Xunit
 		/// <param name="expectedSubMemory">The sub-Memory expected to be in the Memory</param>
 		/// <param name="actualMemory">The Memory to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the sub-Memory is not present inside the Memory</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlyMemory<T> expectedSubMemory,
 			Memory<T> actualMemory)
 				where T : IEquatable<T> =>
@@ -65,7 +66,7 @@ namespace Xunit
 		/// <param name="expectedSubMemory">The sub-Memory expected to be in the Memory</param>
 		/// <param name="actualMemory">The Memory to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the sub-Memory is not present inside the Memory</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlyMemory<T> expectedSubMemory,
 			ReadOnlyMemory<T> actualMemory)
 				where T : IEquatable<T>
@@ -85,7 +86,7 @@ namespace Xunit
 		/// <param name="expectedSubMemory">The sub-Memory expected not to be in the Memory</param>
 		/// <param name="actualMemory">The Memory to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the sub-Memory is present inside the Memory</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Memory<T> expectedSubMemory,
 			Memory<T> actualMemory)
 				where T : IEquatable<T> =>
@@ -97,7 +98,7 @@ namespace Xunit
 		/// <param name="expectedSubMemory">The sub-Memory expected not to be in the Memory</param>
 		/// <param name="actualMemory">The Memory to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the sub-Memory is present inside the Memory</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Memory<T> expectedSubMemory,
 			ReadOnlyMemory<T> actualMemory)
 				where T : IEquatable<T> =>
@@ -109,7 +110,7 @@ namespace Xunit
 		/// <param name="expectedSubMemory">The sub-Memory expected not to be in the Memory</param>
 		/// <param name="actualMemory">The Memory to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the sub-Memory is present inside the Memory</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlyMemory<T> expectedSubMemory,
 			Memory<T> actualMemory)
 				where T : IEquatable<T> =>
@@ -121,7 +122,7 @@ namespace Xunit
 		/// <param name="expectedSubMemory">The sub-Memory expected not to be in the Memory</param>
 		/// <param name="actualMemory">The Memory to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the sub-Memory is present inside the Memory</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlyMemory<T> expectedSubMemory,
 			ReadOnlyMemory<T> actualMemory)
 				where T : IEquatable<T>

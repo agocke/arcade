@@ -31,7 +31,7 @@ namespace Xunit
 		/// <param name="collection">The collection</param>
 		/// <param name="action">The action to test each item against</param>
 		/// <exception cref="AllException">Thrown when the collection contains at least one non-matching element</exception>
-		public static void All<T>(
+		public static void All<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			Action<T> action) =>
 				All(AssertHelper.ToEnumerable(collection), action);
@@ -44,7 +44,7 @@ namespace Xunit
 		/// <param name="collection">The collection</param>
 		/// <param name="action">The action to test each item against</param>
 		/// <exception cref="AllException">Thrown when the collection contains at least one non-matching element</exception>
-		public static void All<T>(
+		public static void All<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			Action<T, int> action) =>
 				All(AssertHelper.ToEnumerable(collection), action);
@@ -57,7 +57,7 @@ namespace Xunit
 		/// <param name="collection">The collection</param>
 		/// <param name="action">The action to test each item against</param>
 		/// <exception cref="AllException">Thrown when the collection contains at least one non-matching element</exception>
-		public static Task AllAsync<T>(
+		public static Task AllAsync<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			Func<T, Task> action) =>
 				AllAsync(AssertHelper.ToEnumerable(collection), action);
@@ -70,7 +70,7 @@ namespace Xunit
 		/// <param name="collection">The collection</param>
 		/// <param name="action">The action to test each item against</param>
 		/// <exception cref="AllException">Thrown when the collection contains at least one non-matching element</exception>
-		public static Task AllAsync<T>(
+		public static Task AllAsync<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			Func<T, int, Task> action) =>
 				AllAsync(AssertHelper.ToEnumerable(collection), action);
@@ -83,7 +83,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="elementInspectors">The element inspectors, which inspect each element in turn. The
 		/// total number of element inspectors must exactly match the number of elements in the collection.</param>
-		public static void Collection<T>(
+		public static void Collection<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			params Action<T>[] elementInspectors) =>
 				Collection(AssertHelper.ToEnumerable(collection), elementInspectors);
@@ -96,7 +96,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="elementInspectors">The element inspectors, which inspect each element in turn. The
 		/// total number of element inspectors must exactly match the number of elements in the collection.</param>
-		public static Task CollectionAsync<T>(
+		public static Task CollectionAsync<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			params Func<T, Task>[] elementInspectors) =>
 				CollectionAsync(AssertHelper.ToEnumerable(collection), elementInspectors);
@@ -108,7 +108,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the collection</param>
 		/// <param name="collection">The collection to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static void Contains<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
+		public static void Contains<[DynamicallyAccessedMembers(EqualityAndFormatterAnnotations)] T>(
 			T expected,
 			IAsyncEnumerable<T> collection) =>
 				Contains(expected, AssertHelper.ToEnumerable(collection));
@@ -121,7 +121,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="comparer">The comparer used to equate objects in the collection with the expected object</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static void Contains<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			IAsyncEnumerable<T> collection,
 			IEqualityComparer<T> comparer) =>
@@ -134,7 +134,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="filter">The filter used to find the item you're ensuring the collection contains</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the collection</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			Predicate<T> filter) =>
 				Contains(AssertHelper.ToEnumerable(collection), filter);
@@ -145,7 +145,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the object to be compared</typeparam>
 		/// <param name="collection">The collection to be inspected</param>
 		/// <exception cref="DistinctException">Thrown when an object is present inside the collection more than once</exception>
-		public static void Distinct<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(IAsyncEnumerable<T> collection) =>
+		public static void Distinct<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(IAsyncEnumerable<T> collection) =>
 			Distinct(AssertHelper.ToEnumerable(collection), EqualityComparer<T>.Default);
 
 		/// <summary>
@@ -155,7 +155,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="comparer">The comparer used to equate objects in the collection with the expected object</param>
 		/// <exception cref="DistinctException">Thrown when an object is present inside the collection more than once</exception>
-		public static void Distinct<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
+		public static void Distinct<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			IEqualityComparer<T> comparer) =>
 				Distinct(AssertHelper.ToEnumerable(collection), comparer);
@@ -167,7 +167,7 @@ namespace Xunit
 		/// <param name="expected">The object that is expected not to be in the collection</param>
 		/// <param name="collection">The collection to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the collection</exception>
-		public static void DoesNotContain<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAndFormatterAnnotations)] T>(
 			T expected,
 			IAsyncEnumerable<T> collection) =>
 				DoesNotContain(expected, AssertHelper.ToEnumerable(collection));
@@ -180,7 +180,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="comparer">The comparer used to equate objects in the collection with the expected object</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the collection</exception>
-		public static void DoesNotContain<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			IAsyncEnumerable<T> collection,
 			IEqualityComparer<T> comparer) =>
@@ -193,7 +193,7 @@ namespace Xunit
 		/// <param name="collection">The collection to be inspected</param>
 		/// <param name="filter">The filter used to find the item you're ensuring the collection does not contain</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the collection</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			Predicate<T> filter) =>
 				DoesNotContain(AssertHelper.ToEnumerable(collection), filter);
@@ -445,7 +445,7 @@ namespace Xunit
 		/// <returns>The single item in the collection.</returns>
 		/// <exception cref="SingleException">Thrown when the collection does not contain
 		/// exactly one element.</exception>
-		public static T Single<T>(IAsyncEnumerable<T> collection) =>
+		public static T Single<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(IAsyncEnumerable<T> collection) =>
 			Single(AssertHelper.ToEnumerable(collection));
 
 		/// <summary>
@@ -460,7 +460,7 @@ namespace Xunit
 		/// <returns>The single item in the filtered collection.</returns>
 		/// <exception cref="SingleException">Thrown when the filtered collection does
 		/// not contain exactly one element.</exception>
-		public static T Single<T>(
+		public static T Single<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			IAsyncEnumerable<T> collection,
 			Predicate<T> predicate) =>
 				Single(AssertHelper.ToEnumerable(collection), predicate);

@@ -5,6 +5,7 @@
 #endif
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Xunit.Sdk;
 
 namespace Xunit
@@ -29,7 +30,7 @@ namespace Xunit
 		/// <param name="expectedSubSpan">The sub-span expected to be in the span</param>
 		/// <param name="actualSpan">The span to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the sub-span is not present inside the span</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Span<T> expectedSubSpan,
 			Span<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -41,7 +42,7 @@ namespace Xunit
 		/// <param name="expectedSubSpan">The sub-span expected to be in the span</param>
 		/// <param name="actualSpan">The span to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the sub-span is not present inside the span</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Span<T> expectedSubSpan,
 			ReadOnlySpan<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -53,7 +54,7 @@ namespace Xunit
 		/// <param name="expectedSubSpan">The sub-span expected to be in the span</param>
 		/// <param name="actualSpan">The span to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the sub-span is not present inside the span</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlySpan<T> expectedSubSpan,
 			Span<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -65,7 +66,7 @@ namespace Xunit
 		/// <param name="expectedSubSpan">The sub-span expected to be in the span</param>
 		/// <param name="actualSpan">The span to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the sub-span is not present inside the span</exception>
-		public static void Contains<T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlySpan<T> expectedSubSpan,
 			ReadOnlySpan<T> actualSpan)
 				where T : IEquatable<T>
@@ -83,7 +84,7 @@ namespace Xunit
 		/// <param name="expectedSubSpan">The sub-span expected not to be in the span</param>
 		/// <param name="actualSpan">The span to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the sub-span is present inside the span</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Span<T> expectedSubSpan,
 			Span<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -95,7 +96,7 @@ namespace Xunit
 		/// <param name="expectedSubSpan">The sub-span expected not to be in the span</param>
 		/// <param name="actualSpan">The span to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the sub-span is present inside the span</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Span<T> expectedSubSpan,
 			ReadOnlySpan<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -107,7 +108,7 @@ namespace Xunit
 		/// <param name="expectedSubSpan">The sub-span expected not to be in the span</param>
 		/// <param name="actualSpan">The span to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the sub-span is present inside the span</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlySpan<T> expectedSubSpan,
 			Span<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -119,7 +120,7 @@ namespace Xunit
 		/// <param name="expectedSubSpan">The sub-span expected not to be in the span</param>
 		/// <param name="actualSpan">The span to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the sub-span is present inside the span</exception>
-		public static void DoesNotContain<T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlySpan<T> expectedSubSpan,
 			ReadOnlySpan<T> actualSpan)
 				where T : IEquatable<T>
@@ -146,7 +147,7 @@ namespace Xunit
 		/// <param name="actualArray">The actual array value.</param>
 		/// <exception cref="EqualException">Thrown when the collections are not equal.</exception>
 		// This overload exists per https://github.com/xunit/xunit/discussions/3021
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlySpan<T> expectedSpan,
 			T[] actualArray)
 				where T : IEquatable<T> =>
@@ -158,7 +159,7 @@ namespace Xunit
 		/// <param name="expectedSpan">The expected span value.</param>
 		/// <param name="actualSpan">The actual span value.</param>
 		/// <exception cref="EqualException">Thrown when the spans are not equal.</exception>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Span<T> expectedSpan,
 			Span<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -170,7 +171,7 @@ namespace Xunit
 		/// <param name="expectedSpan">The expected span value.</param>
 		/// <param name="actualSpan">The actual span value.</param>
 		/// <exception cref="EqualException">Thrown when the spans are not equal.</exception>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			Span<T> expectedSpan,
 			ReadOnlySpan<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -182,7 +183,7 @@ namespace Xunit
 		/// <param name="expectedSpan">The expected span value.</param>
 		/// <param name="actualSpan">The actual span value.</param>
 		/// <exception cref="EqualException">Thrown when the spans are not equal.</exception>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlySpan<T> expectedSpan,
 			Span<T> actualSpan)
 				where T : IEquatable<T> =>
@@ -194,7 +195,7 @@ namespace Xunit
 		/// <param name="expectedSpan">The expected span value.</param>
 		/// <param name="actualSpan">The actual span value.</param>
 		/// <exception cref="EqualException">Thrown when the spans are not equal.</exception>
-		public static void Equal<T>(
+		public static void Equal<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ReadOnlySpan<T> expectedSpan,
 			ReadOnlySpan<T> actualSpan)
 				where T : IEquatable<T>

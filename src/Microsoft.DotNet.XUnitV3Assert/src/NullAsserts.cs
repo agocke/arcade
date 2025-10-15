@@ -95,7 +95,7 @@ namespace Xunit
 		/// </summary>
 		/// <param name="value">The value to be inspected</param>
 		/// <exception cref="NullException">Thrown when the value is not null</exception>
-		public static void Null<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>(T? value)
+		public static void Null<[DynamicallyAccessedMembers(Assert.EqualityAndFormatterAnnotations)] T>(T? value)
 			where T : struct
 		{
 			if (value.HasValue)

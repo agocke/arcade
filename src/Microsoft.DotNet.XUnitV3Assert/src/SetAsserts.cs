@@ -28,7 +28,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			ISet<T> set)
 		{
@@ -51,7 +51,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			IReadOnlySet<T> set)
 		{
@@ -74,7 +74,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			HashSet<T> set) =>
 				Contains(expected, (ISet<T>)set);
@@ -86,7 +86,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			SortedSet<T> set) =>
 				Contains(expected, (ISet<T>)set);
@@ -98,7 +98,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			ImmutableHashSet<T> set) =>
 				Contains(expected, (ISet<T>)set);
@@ -110,7 +110,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void Contains<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Contains<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			ImmutableSortedSet<T> set) =>
 				Contains(expected, (ISet<T>)set);
@@ -122,7 +122,7 @@ namespace Xunit
 		/// <param name="expected">The object that is expected not to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the set</exception>
-		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			ISet<T> set)
 		{
@@ -144,7 +144,7 @@ namespace Xunit
 		/// <param name="expected">The object that is expected not to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="DoesNotContainException">Thrown when the object is present inside the collection</exception>
-		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			IReadOnlySet<T> set)
 		{
@@ -166,7 +166,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			HashSet<T> set) =>
 				DoesNotContain(expected, (ISet<T>)set);
@@ -178,7 +178,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			SortedSet<T> set) =>
 				DoesNotContain(expected, (ISet<T>)set);
@@ -190,7 +190,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			ImmutableHashSet<T> set) =>
 				DoesNotContain(expected, (ISet<T>)set);
@@ -202,7 +202,7 @@ namespace Xunit
 		/// <param name="expected">The object expected to be in the set</param>
 		/// <param name="set">The set to be inspected</param>
 		/// <exception cref="ContainsException">Thrown when the object is not present in the set</exception>
-		public static void DoesNotContain<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void DoesNotContain<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			T expected,
 			ImmutableSortedSet<T> set) =>
 				DoesNotContain(expected, (ISet<T>)set);
@@ -214,7 +214,7 @@ namespace Xunit
 		/// <param name="expectedSubset">The expected subset</param>
 		/// <param name="actual">The set expected to be a proper subset</param>
 		/// <exception cref="ContainsException">Thrown when the actual set is not a proper subset of the expected set</exception>
-		public static void ProperSubset<T>(
+		public static void ProperSubset<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ISet<T> expectedSubset,
 #if XUNIT_NULLABLE
 			ISet<T>? actual)
@@ -238,7 +238,7 @@ namespace Xunit
 		/// <param name="expectedSuperset">The expected superset</param>
 		/// <param name="actual">The set expected to be a proper superset</param>
 		/// <exception cref="ContainsException">Thrown when the actual set is not a proper superset of the expected set</exception>
-		public static void ProperSuperset<T>(
+		public static void ProperSuperset<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ISet<T> expectedSuperset,
 #if XUNIT_NULLABLE
 			ISet<T>? actual)
@@ -262,7 +262,7 @@ namespace Xunit
 		/// <param name="expectedSubset">The expected subset</param>
 		/// <param name="actual">The set expected to be a subset</param>
 		/// <exception cref="ContainsException">Thrown when the actual set is not a subset of the expected set</exception>
-		public static void Subset<T>(
+		public static void Subset<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ISet<T> expectedSubset,
 #if XUNIT_NULLABLE
 			ISet<T>? actual)
@@ -286,7 +286,7 @@ namespace Xunit
 		/// <param name="expectedSuperset">The expected superset</param>
 		/// <param name="actual">The set expected to be a superset</param>
 		/// <exception cref="ContainsException">Thrown when the actual set is not a superset of the expected set</exception>
-		public static void Superset<T>(
+		public static void Superset<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 			ISet<T> expectedSuperset,
 #if XUNIT_NULLABLE
 			ISet<T>? actual)

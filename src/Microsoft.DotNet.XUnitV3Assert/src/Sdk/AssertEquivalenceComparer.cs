@@ -10,6 +10,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Xunit
 {
@@ -17,6 +18,8 @@ namespace Xunit
 	/// An implementation of <see cref="IEqualityComparer"/> that uses the same logic
 	/// from <see cref="Assert.Equivalent"/>.
 	/// </summary>
+	[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+	[RequiresDynamicCode("Equivalence is not supported when trimming")]
 #if XUNIT_VISIBILITY_INTERNAL
 	internal
 #else
@@ -63,6 +66,8 @@ namespace Xunit
 	/// to ensure strict ordering of collections while doing equivalence comparisons for
 	/// the items inside the collection, per <see href="https://github.com/xunit/xunit/discussions/3186"/>.
 	/// </remarks>
+	[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+	[RequiresDynamicCode("Equivalence is not supported when trimming")]
 #if XUNIT_VISIBILITY_INTERNAL
 	internal
 #else

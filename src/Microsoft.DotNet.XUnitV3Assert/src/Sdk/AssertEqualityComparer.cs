@@ -42,14 +42,26 @@ namespace Xunit.Sdk
 		static readonly object[] singleNullObject = new object[] { null };
 #endif
 
+		internal static IEqualityComparer GetDefaultComparer<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T>()
+        {
+			var comparer = new AssertEqualityComparer<T>(null);
+			var adapter = new AssertEqualityComparerAdapter<T>(comparer);
+			return adapter;
+        }
+
 		/// <summary>
 		/// Gets the default comparer to be used for the provided <paramref name="type"/> when a custom one
 		/// has not been provided. Creates an instance of <see cref="AssertEqualityComparer{T}"/> wrapped
 		/// by <see cref="AssertEqualityComparerAdapter{T}"/>.
 		/// </summary>
 		/// <param name="type">The type to be compared</param>
+		[RequiresUnreferencedCode("Requires MakeGenericType")]
+		[RequiresDynamicCode("Requires MakeGenericType")]
 		internal static IEqualityComparer GetDefaultComparer(Type type) =>
-			cachedDefaultComparers.GetOrAdd(type, itemType =>
+			cachedDefaultComparers.GetOrAdd(type,
+			[RequiresUnreferencedCode("Requires MakeGenericType")]
+			[RequiresDynamicCode("Requires MakeGenericType")]
+			(Type itemType) =>
 			{
 				var comparerType = typeof(AssertEqualityComparer<>).MakeGenericType(itemType);
 				var comparer =
@@ -66,10 +78,20 @@ namespace Xunit.Sdk
 
 		/// <summary>
 		/// Gets the default comparer to be used as an inner comparer for the provided <paramref name="type"/>
+		/// when a custom one has not been provided. This defaults to an <see cref="object"/>-based
+		/// comparer.
+		/// </summary>
+		/// <param name="type">The type to create an inner comparer for</param>
+		internal static IEqualityComparer GetDefaultInnerComparer<T>() => GetDefaultComparer<object>();
+
+		/// <summary>
+		/// Gets the default comparer to be used as an inner comparer for the provided <paramref name="type"/>
 		/// when a custom one has not been provided. For non-collections, this defaults to an <see cref="object"/>-based
 		/// comparer; for collections, this creates an inner comparer based on the item type in the collection.
 		/// </summary>
 		/// <param name="type">The type to create an inner comparer for</param>
+		[RequiresUnreferencedCode("Unpacking IEnumerable<T> with reflection is not trim-compatible")]
+		[RequiresDynamicCode("Unpacking IEnumerable<T> with reflection is not trim-compatible")]
 		internal static IEqualityComparer GetDefaultInnerComparer(Type type) =>
 			cachedDefaultInnerComparers.GetOrAdd(type, t =>
 			{
@@ -115,7 +137,11 @@ namespace Xunit.Sdk
 	/// <typeparam name="T">The type that is being compared.</typeparam>
 	sealed class AssertEqualityComparer<[DynamicallyAccessedMembers(Assert.EqualityAnnotations)] T> : IAssertEqualityComparer<T>
 	{
+#if XUNIT_AOT
+		internal static readonly IEqualityComparer DefaultInnerComparer = AssertEqualityComparer.GetDefaultInnerComparer<T>();
+#else
 		internal static readonly IEqualityComparer DefaultInnerComparer = AssertEqualityComparer.GetDefaultInnerComparer(typeof(T));
+#endif
 
 		static readonly ConcurrentDictionary<Type, Type> cacheOfIComparableOfT = new ConcurrentDictionary<Type, Type>();
 		static readonly ConcurrentDictionary<Type, Type> cacheOfIEquatableOfT = new ConcurrentDictionary<Type, Type>();
@@ -316,7 +342,11 @@ namespace Xunit.Sdk
 						yKey?.GetType();
 #endif
 
+#if XUNIT_AOT
+					var keyComparer = AssertEqualityComparer.GetDefaultComparer<T>();
+#else
 					var keyComparer = AssertEqualityComparer.GetDefaultComparer(xKeyType == yKeyType ? xKeyType : typeof(object));
+#endif
 					if (!keyComparer.Equals(xKey, yKey))
 						return AssertEqualityResult.ForResult(false, x, y);
 				}
@@ -340,7 +370,11 @@ namespace Xunit.Sdk
 					yValue?.GetType();
 #endif
 
+#if XUNIT_AOT
+				var valueComparer = AssertEqualityComparer.GetDefaultComparer<T>();
+#else
 				var valueComparer = AssertEqualityComparer.GetDefaultComparer(xValueType == yValueType ? xValueType : typeof(object));
+#endif
 				return AssertEqualityResult.ForResult(valueComparer.Equals(xValue, yValue), x, y);
 			}
 

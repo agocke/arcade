@@ -40,6 +40,9 @@ namespace Xunit
 			| DynamicallyAccessedMemberTypes.PublicMethods
 			| DynamicallyAccessedMemberTypes.PublicProperties;
 
+		internal const DynamicallyAccessedMemberTypes EqualityAndFormatterAnnotations =
+			EqualityAnnotations | ArgumentFormatter.FormatAnnotations;
+
 		/// <summary>
 		/// Verifies that two arrays of un-managed type T are equal, using Span&lt;T&gt;.SequenceEqual.
 		/// This can be significantly faster than generic enumerables, when the collections are actually
@@ -78,7 +81,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the objects to be compared</typeparam>
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
-		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAndFormatterAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual) =>
@@ -95,7 +98,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The comparer used to compare the two objects</param>
-		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAndFormatterAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual,
@@ -113,7 +116,7 @@ namespace Xunit
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
 		/// <param name="comparer">The comparer used to compare the two objects</param>
-		public static void Equal<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void Equal<[DynamicallyAccessedMembers(EqualityAndFormatterAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual,
@@ -579,7 +582,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the objects to be compared</typeparam>
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
-		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAndFormatterAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual) =>
@@ -596,7 +599,7 @@ namespace Xunit
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
 		/// <param name="comparer">The comparer used to examine the objects</param>
-		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAndFormatterAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual,
@@ -614,7 +617,7 @@ namespace Xunit
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
 		/// <param name="comparer">The comparer used to examine the objects</param>
-		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void NotEqual<[DynamicallyAccessedMembers(EqualityAndFormatterAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual,
@@ -970,7 +973,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the objects to be compared</typeparam>
 		/// <param name="expected">The expected object</param>
 		/// <param name="actual">The actual object</param>
-		public static void NotStrictEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void NotStrictEqual<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual)
@@ -994,7 +997,7 @@ namespace Xunit
 		/// <typeparam name="T">The type of the objects to be compared</typeparam>
 		/// <param name="expected">The expected value</param>
 		/// <param name="actual">The value to be compared against</param>
-		public static void StrictEqual<[DynamicallyAccessedMembers(EqualityAnnotations)] T>(
+		public static void StrictEqual<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T>(
 #if XUNIT_NULLABLE
 			[AllowNull] T expected,
 			[AllowNull] T actual)

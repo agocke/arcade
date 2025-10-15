@@ -33,6 +33,8 @@ using Xunit.Sdk;
 
 #if XUNIT_NULLABLE
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+
 #endif
 
 #if NET8_0_OR_GREATER
@@ -72,11 +74,31 @@ namespace Xunit.Internal
 #endif
 
 #if XUNIT_NULLABLE
-		static readonly Lazy<Type?> fileSystemInfoType = new Lazy<Type?>(() => GetTypeByName("System.IO.FileSystemInfo"));
-		static readonly Lazy<PropertyInfo?> fileSystemInfoFullNameProperty = new Lazy<PropertyInfo?>(() => fileSystemInfoType.Value?.GetProperty("FullName"));
+		static readonly Lazy<Type?> fileSystemInfoType = new Lazy<Type?>(
+#if XUNIT_AOT
+			typeof(FileSystemInfo));
 #else
-		static readonly Lazy<Type> fileSystemInfoType = new Lazy<Type>(() => GetTypeByName("System.IO.FileSystemInfo"));
-		static readonly Lazy<PropertyInfo> fileSystemInfoFullNameProperty = new Lazy<PropertyInfo>(() => fileSystemInfoType.Value?.GetProperty("FullName"));
+			() => GetTypeByName("System.IO.FileSystemInfo"));
+#endif
+		static readonly Lazy<PropertyInfo?> fileSystemInfoFullNameProperty = new Lazy<PropertyInfo?>(
+#if XUNIT_AOT
+			typeof(FileSystemInfo).GetProperty("FullName"));
+#else
+			() => fileSystemInfoType.Value?.GetProperty("FullName"));
+#endif
+#else
+		static readonly Lazy<Type> fileSystemInfoType = new Lazy<Type>(
+#if XUNIT_AOT
+			typeof(FileSystemInfo));
+#else
+			() => GetTypeByName("System.IO.FileSystemInfo"));
+#endif
+		static readonly Lazy<PropertyInfo> fileSystemInfoFullNameProperty = new Lazy<PropertyInfo>(
+#if XUNIT_AOT
+			typeof(FileSystemInfo).GetProperty("FullName"));
+#else
+			() => fileSystemInfoType.Value?.GetProperty("FullName"));
+#endif
 #endif
 
 		static readonly Lazy<Assembly[]> getAssemblies = new Lazy<Assembly[]>(AppDomain.CurrentDomain.GetAssemblies);
@@ -90,12 +112,18 @@ namespace Xunit.Internal
 		static readonly Type objectType = typeof(object);
 		static readonly IEqualityComparer<object> referenceEqualityComparer = new ReferenceEqualityComparer();
 
+		const DynamicallyAccessedMemberTypes FieldsAndProps = DynamicallyAccessedMemberTypes.PublicFields
+			| DynamicallyAccessedMemberTypes.NonPublicFields
+			| DynamicallyAccessedMemberTypes.PublicProperties
+			| DynamicallyAccessedMemberTypes.NonPublicProperties;
+
+		[UnconditionalSuppressMessage("trimming", "IL2111", Justification = "All inputs have matching DAMT annotations")]
 #if XUNIT_NULLABLE
-		static Dictionary<string, Func<object?, object?>> GetGettersForType(Type type) =>
+		static Dictionary<string, Func<object?, object?>> GetGettersForType([DynamicallyAccessedMembers(FieldsAndProps)] Type type) =>
 #else
-		static Dictionary<string, Func<object, object>> GetGettersForType(Type type) =>
+		static Dictionary<string, Func<object, object>> GetGettersForType([DynamicallyAccessedMembers(FieldsAndProps)] Type type) =>
 #endif
-			gettersByType.GetOrAdd(type, _type =>
+			gettersByType.GetOrAdd(type, ([DynamicallyAccessedMembers(FieldsAndProps)] _type) =>
 			{
 				var fieldGetters =
 					_type
@@ -151,6 +179,7 @@ namespace Xunit.Internal
 						.ToDictionary(g => g.name, g => g.getter);
 			});
 
+		[RequiresUnreferencedCode("Getting types by name is not supported when trimming")]
 #if XUNIT_NULLABLE
 		static Type? GetTypeByName(string typeName)
 #else
@@ -411,6 +440,7 @@ namespace Xunit.Internal
 			}
 		}
 
+		[RequiresUnreferencedCode("Cannot dynamically unwrap Lazy without reflection")]
 #if XUNIT_NULLABLE
 		static object? UnwrapLazy(
 			object? value,
@@ -442,6 +472,8 @@ namespace Xunit.Internal
 			return value;
 		}
 
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 		/// <summary/>
 #if XUNIT_NULLABLE
 		public static EquivalentException? VerifyEquivalence(
@@ -469,6 +501,8 @@ namespace Xunit.Internal
 					exclusions ?? emptyExclusions
 				);
 
+		[RequiresUnreferencedCode("Equivalence is not supported in AOT")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalence(
 			object? expected,
@@ -606,6 +640,8 @@ namespace Xunit.Internal
 			);
 		}
 
+		[RequiresUnreferencedCode("Equivalence is not supported in AOT")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceEnumerable(
 #else
@@ -651,6 +687,8 @@ namespace Xunit.Internal
 			return null;
 		}
 
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceFileSystemInfo(
 #else
@@ -680,7 +718,8 @@ namespace Xunit.Internal
 			return VerifyEquivalenceReference(expectedAnonymous, actual, strict, prefix, expectedRefs, actualRefs, depth, exclusions);
 		}
 
-#if !XUNIT_AOT // Equivalence requires AOT-incompatible reflection
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceGroupings(
 #else
@@ -717,7 +756,6 @@ namespace Xunit.Internal
 
 			return null;
 		}
-#endif
 
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceIntrinsics(
@@ -738,6 +776,8 @@ namespace Xunit.Internal
 			return result ? null : EquivalentException.ForMemberValueMismatch(expected, actual, prefix);
 		}
 
+		[RequiresUnreferencedCode("Equivalence is not supported when trimming")]
+		[RequiresDynamicCode("Equivalence is not supported when trimming")]
 #if XUNIT_NULLABLE
 		static EquivalentException? VerifyEquivalenceReference(
 #else

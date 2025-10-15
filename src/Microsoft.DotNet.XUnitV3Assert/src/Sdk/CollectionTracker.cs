@@ -204,7 +204,11 @@ namespace Xunit.Sdk
 					var valueXType = valueX.GetType();
 					var valueYType = valueY.GetType();
 
+#if XUNIT_AOT
+					var comparer = AssertEqualityComparer.GetDefaultComparer<object>();
+#else
 					var comparer = AssertEqualityComparer.GetDefaultComparer(valueXType == valueYType ? valueXType : typeof(object));
+#endif
 					if (!comparer.Equals(valueX, valueY))
 						return AssertEqualityResult.ForResult(false, x.InnerEnumerable, y.InnerEnumerable);
 				}
@@ -311,6 +315,11 @@ namespace Xunit.Sdk
 			if (x == null || y == null)
 				return null;
 
+#if XUNIT_AOT
+			// Sets cannot be accessed by reflection when trimming
+			return null;
+#else
+
 			var elementTypeX = ArgumentFormatter.GetSetElementType(x.InnerEnumerable);
 			var elementTypeY = ArgumentFormatter.GetSetElementType(y.InnerEnumerable);
 
@@ -326,6 +335,7 @@ namespace Xunit.Sdk
 #else
 			return AssertEqualityResult.ForResult((bool)genericCompareMethod.Invoke(null, new object[] { x.InnerEnumerable, y.InnerEnumerable, itemComparer }), x.InnerEnumerable, y.InnerEnumerable);
 #endif
+#endif // XUNIT_AOT
 		}
 
 		static bool CompareTypedSets<T>(
@@ -454,7 +464,7 @@ namespace Xunit.Sdk
 #else
 	public
 #endif
-	sealed class CollectionTracker<T> : CollectionTracker, IEnumerable<T>
+	sealed class CollectionTracker<[DynamicallyAccessedMembers(ArgumentFormatter.FormatAnnotations)] T> : CollectionTracker, IEnumerable<T>
 	{
 		readonly IEnumerable<T> collection;
 #if XUNIT_NULLABLE

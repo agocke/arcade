@@ -48,7 +48,7 @@ namespace Xunit.Sdk
 						Environment.NewLine,
 						ArgumentFormatter.Format(Assert.GuardArgumentNotNull(nameof(expected), expected)),
 						Environment.NewLine,
-						ArgumentFormatter.Format(actual?.GetType())
+						ArgumentFormatter.Format(Assert.GuardArgumentNotNull(nameof(actual), actual?.GetType()))
 					)
 				);
 	}
