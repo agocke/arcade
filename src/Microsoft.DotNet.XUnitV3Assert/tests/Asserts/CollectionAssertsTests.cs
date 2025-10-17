@@ -1340,8 +1340,12 @@ public class CollectionAssertsTests
 				Assert.IsType<EqualException>(ex);
 				Assert.Equal(
 					"Assert.Equal() Failure: Dictionaries differ" + Environment.NewLine +
+#if XUNIT_AOT
+					$"Expected: [[a, 1], [be, 2], [c, 3], [d, 4], [e, 5], {ArgumentFormatter.Ellipsis}]" + Environment.NewLine +
+#else
 					$"Expected: [[\"a\"] = 1, [\"be\"] = 2, [\"c\"] = 3, [\"d\"] = 4, [\"e\"] = 5, {ArgumentFormatter.Ellipsis}]" + Environment.NewLine +
-					$"Actual:   [[\"a\"] = 1, [\"ba\"] = 2, [\"c\"] = 3, [\"d\"] = 4, [\"e\"] = 5, {ArgumentFormatter.Ellipsis}]",
+#endif
+					$"Actual:   [[a, 1], [ba, 2], [c, 3], [d, 4], [e, 5], {ArgumentFormatter.Ellipsis}]",
 					ex.Message
 				);
 			}
@@ -1968,8 +1972,13 @@ public class CollectionAssertsTests
 				Assert.IsType<NotEqualException>(ex);
 				Assert.Equal(
 					"Assert.NotEqual() Failure: Dictionaries are equal" + Environment.NewLine +
+#if XUNIT_AOT
+					"Expected: Not [[a, 1], [b, 2], [c, 3]]" + Environment.NewLine +
+					"Actual:       [[b, 2], [c, 3], [a, 1]]",
+#else
 					"Expected: Not [[\"a\"] = 1, [\"b\"] = 2, [\"c\"] = 3]" + Environment.NewLine +
 					"Actual:       [[\"b\"] = 2, [\"c\"] = 3, [\"a\"] = 1]",
+#endif
 					ex.Message
 				);
 			}

@@ -1168,15 +1168,22 @@ public class EqualityAssertsTests
 					Assert.IsType<EqualException>(ex);
 					Assert.Equal(
 						"Assert.Equal() Failure: Dictionaries differ" + Environment.NewLine +
+#if XUNIT_AOT
+						"Expected: [[foo, bar]]" + Environment.NewLine +
+						"Actual:   [[foo, baz]]",
+#else
 						"Expected: [[\"foo\"] = \"bar\"]" + Environment.NewLine +
 						"Actual:   [[\"foo\"] = \"baz\"]",
+#endif
 						ex.Message
 					);
 				}
 
 				assertFailure(() => Assert.Equal(expected, actual));
+#if !XUNIT_AOT
 				assertFailure(() => Assert.Equal(expected, (IDictionary)actual));
 				assertFailure(() => Assert.Equal(expected, (object)actual));
+#endif
 			}
 
 			[Fact]

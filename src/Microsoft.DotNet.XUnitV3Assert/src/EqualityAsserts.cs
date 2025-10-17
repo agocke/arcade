@@ -91,6 +91,9 @@ namespace Xunit
 #endif
 				Equal(expected, actual, GetEqualityComparer<T>());
 
+		public static void Equal<T>(HashSet<T> expected, HashSet<T> actual)
+			=> Equal(expected, actual, HashSet<T>.CreateSetComparer());
+
 		/// <summary>
 		/// Verifies that two objects are equal, using a custom comparer function.
 		/// </summary>

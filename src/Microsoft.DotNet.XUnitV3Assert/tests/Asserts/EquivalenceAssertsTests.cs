@@ -11,13 +11,13 @@ public class EquivalenceAssertsTests
 {
 	public class NullValues
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void TwoNullsAreEquivalent()
 		{
 			Assert.Equivalent(null, null);
 		}
 
-		[Theory]
+		[Theory(Skip = "Not AOT compatible")]
 		[InlineData(null, 42)]
 		[InlineData(42, null)]
 		public void NullIsNotEquivalentToNonNull(
@@ -53,7 +53,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void SameType_Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(12, 13));
@@ -67,21 +67,21 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void SameValueFromDifferentIntrinsicTypes_Success()
 		{
 			Assert.Equivalent(12, 12L);
 		}
 
 		// https://github.com/xunit/xunit/issues/2913
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Decimals_Success()
 		{
 			Assert.Equivalent(1m, 1m);
 		}
 
 		// https://github.com/xunit/xunit/issues/2913
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Decimals_Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(1m, 2m));
@@ -96,7 +96,7 @@ public class EquivalenceAssertsTests
 		}
 
 		// https://github.com/xunit/xunit/issues/2913
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void IntrinsicPlusNonIntrinsic_Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(1m, new object()));
@@ -113,14 +113,14 @@ public class EquivalenceAssertsTests
 		public class Guids
 		{
 			// https://github.com/xunit/xunit/issues/2974
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void SameType_Success()
 			{
 				Assert.Equivalent(new Guid("b727762b-a1c1-49a0-b045-59ba97b17b61"), new Guid("b727762b-a1c1-49a0-b045-59ba97b17b61"));
 			}
 
 			// https://github.com/xunit/xunit/issues/2974
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void SameType_Failure()
 			{
 				var ex = Record.Exception(() => Assert.Equivalent(new Guid("b727762b-a1c1-49a0-b045-59ba97b17b61"), new Guid("963ff9f5-cb83-480e-85ea-7e8950a01f00")));
@@ -135,7 +135,7 @@ public class EquivalenceAssertsTests
 			}
 
 			// https://github.com/xunit/xunit/issues/2974
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void IntrinsicPlusNonIntrinsic_Failure()
 			{
 				var ex = Record.Exception(() => Assert.Equivalent(new Guid("b727762b-a1c1-49a0-b045-59ba97b17b61"), new object()));
@@ -153,7 +153,7 @@ public class EquivalenceAssertsTests
 
 	public class NullableValueTypes
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			int? expected = 42;
@@ -162,7 +162,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			int? expected = 42;
@@ -182,7 +182,7 @@ public class EquivalenceAssertsTests
 
 	public class ValueTypes_Identical_Deep
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new DeepStruct(new ShallowClass { Value1 = 42, Value2 = "Hello, world!" });
@@ -211,13 +211,13 @@ public class EquivalenceAssertsTests
 
 	public class Strings
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent("Hello", "Hello");
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent("Hello, world", "Hello, world!"));
@@ -231,7 +231,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void NullIsNotEquivalentToEmptyString()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(null, string.Empty));
@@ -248,13 +248,13 @@ public class EquivalenceAssertsTests
 
 	public class AnonymousTypes_Identical_Shallow
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent(new { x = 42 }, new { x = 42 });
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new { x = 42 }, new { x = 2112 }));
@@ -271,13 +271,13 @@ public class EquivalenceAssertsTests
 
 	public class AnonymousTypes_Identical_Deep
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent(new { x = new { y = 42 } }, new { x = new { y = 42 } });
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new { x = new { y = 42 } }, new { x = new { y = 2112 } }));
@@ -294,13 +294,13 @@ public class EquivalenceAssertsTests
 
 	public class AnonymousTypes_Compatible_Shallow
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent(new { x = 42, y = 2112 }, new { y = 2112, x = 42 });
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_IgnorePrivateValue()
 		{
 			var expected = new PrivateMembersClass(1, "help");
@@ -309,7 +309,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new { x = 42, y = 2600 }, new { y = 2600, x = 2112 }));
@@ -326,13 +326,13 @@ public class EquivalenceAssertsTests
 
 	public class AnonymousTypes_Compatible_Deep
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent(new { x = new { y = 2112 }, z = 42 }, new { z = 42, x = new { y = 2112 } });
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new { x = new { y = 2600 }, z = 42 }, new { z = 42, x = new { y = 2112 } }));
@@ -349,7 +349,7 @@ public class EquivalenceAssertsTests
 
 	public class ComplexTypes_Identical_Shallow_NotStructuralEquatable
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new ShallowClass { Value1 = 42, Value2 = "Hello, world!" };
@@ -358,7 +358,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_IgnoreStaticValue()
 		{
 			try
@@ -378,7 +378,7 @@ public class EquivalenceAssertsTests
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var expected = new ShallowClass { Value1 = 42, Value2 = "Hello, world!" };
@@ -398,7 +398,7 @@ public class EquivalenceAssertsTests
 
 	public class ComplexTypes_Identical_Deep_NotStructuralEquatable
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new DeepClass { Shallow = new ShallowClass { Value1 = 42, Value2 = "Hello, world!" }, Value3 = 21.12m };
@@ -407,7 +407,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var expected = new DeepClass { Shallow = new ShallowClass { Value1 = 42, Value2 = "Hello, world!" }, Value3 = 21.12m };
@@ -427,7 +427,7 @@ public class EquivalenceAssertsTests
 
 	public class ComplexTypes_Compatible_Shallow_NotStructuralEquatable
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new ShallowClass { Value1 = 42, Value2 = "Hello, world!" };
@@ -436,7 +436,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var expected = new ShallowClass { Value1 = 42, Value2 = "Hello, world!" };
@@ -456,7 +456,7 @@ public class EquivalenceAssertsTests
 
 	public class ComplexTypes_Compatible_Deep_NotStructuralEquatable
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new DeepClass { Shallow = new ShallowClass { Value1 = 42, Value2 = "Hello, world!" }, Value3 = 21.12m };
@@ -465,7 +465,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var expected = new DeepClass { Shallow = new ShallowClass { Value1 = 42, Value2 = "Hello, world!" }, Value3 = 21.12m };
@@ -485,7 +485,7 @@ public class EquivalenceAssertsTests
 
 	public class MixedComplexAndAnonymousTypes
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new { Shallow = new { Value1 = 42, Value2 = "Hello, world!" }, Value3 = 21.12m };
@@ -494,7 +494,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var expected = new { Shallow = new { Value1 = 42, Value2 = "Hello, world" }, Value3 = 21.12m };
@@ -514,7 +514,7 @@ public class EquivalenceAssertsTests
 
 	public class MismatchedMembers_NotStrict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Shallow_Success()
 		{
 			// Expected can be subset of Actual when strict is false
@@ -525,7 +525,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Deep_Success()
 		{
 			// Expected can be subset of Actual when strict is false
@@ -536,7 +536,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Shallow_Failure()
 		{
 			// Expected can never be superset of Actual
@@ -557,7 +557,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Deep_Failure()
 		{
 			// Expected can never be superset of Actual
@@ -581,7 +581,7 @@ public class EquivalenceAssertsTests
 
 	public class MismatchedMembers_Strict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			// Expected cannot be subset of Actual when strict is true
@@ -605,13 +605,13 @@ public class EquivalenceAssertsTests
 
 	public class ArrayOfValueTypes_NotStrict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent(new[] { 1, 4 }, new[] { 9, 4, 1 }, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedArray()
 		{
 			var expected = new { x = new[] { 1, 4 } };
@@ -620,7 +620,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new[] { 1, 6 }, new[] { 9, 4, 1 }, strict: false));
@@ -634,7 +634,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray()
 		{
 			var expected = new { x = new[] { 1, 6 } };
@@ -654,13 +654,13 @@ public class EquivalenceAssertsTests
 
 	public class ArrayOfValueTypes_Strict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent(new[] { 1, 9, 4 }, new[] { 9, 4, 1 }, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedArray()
 		{
 			var expected = new { x = new[] { 1, 9, 4 } };
@@ -669,7 +669,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ValueNotFoundInActual()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new[] { 1, 6 }, new[] { 9, 4, 1 }, strict: true));
@@ -683,7 +683,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ExtraValueInActual()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new[] { 1, 9, 4 }, new[] { 6, 9, 4, 1 }, strict: true));
@@ -697,7 +697,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray_ValueNotFoundInActual()
 		{
 			var expected = new { x = new[] { 1, 6 } };
@@ -714,7 +714,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray_ExtraValueInActual()
 		{
 			var expected = new { x = new[] { 1, 9, 4 } };
@@ -734,13 +734,13 @@ public class EquivalenceAssertsTests
 
 	public class ImmutableArrayOfValueTypes_NotStrict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent(new[] { 1, 4 }.ToImmutableArray(), new[] { 9, 4, 1 }.ToImmutableArray(), strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedArray()
 		{
 			var expected = new { x = new[] { 1, 4 }.ToImmutableArray() };
@@ -749,7 +749,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new[] { 1, 6 }.ToImmutableArray(), new[] { 9, 4, 1 }.ToImmutableArray(), strict: false));
@@ -763,7 +763,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray()
 		{
 			var expected = new { x = new[] { 1, 6 }.ToImmutableArray() };
@@ -783,13 +783,13 @@ public class EquivalenceAssertsTests
 
 	public class ImmutableArrayOfValueTypes_Strict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			Assert.Equivalent(new[] { 1, 9, 4 }.ToImmutableArray(), new[] { 9, 4, 1 }.ToImmutableArray(), strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedArray()
 		{
 			var expected = new { x = new[] { 1, 9, 4 }.ToImmutableArray() };
@@ -798,7 +798,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ValueNotFoundInActual()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new[] { 1, 6 }.ToImmutableArray(), new[] { 9, 4, 1 }.ToImmutableArray(), strict: true));
@@ -812,7 +812,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ExtraValueInActual()
 		{
 			var ex = Record.Exception(() => Assert.Equivalent(new[] { 1, 9, 4 }.ToImmutableArray(), new[] { 6, 9, 4, 1 }.ToImmutableArray(), strict: true));
@@ -826,7 +826,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray_ValueNotFoundInActual()
 		{
 			var expected = new { x = new[] { 1, 6 }.ToImmutableArray() };
@@ -843,7 +843,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray_ExtraValueInActual()
 		{
 			var expected = new { x = new[] { 1, 9, 4 }.ToImmutableArray() };
@@ -863,7 +863,7 @@ public class EquivalenceAssertsTests
 
 	public class ArrayOfObjects_NotStrict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new[] { new { Foo = "Bar" } };
@@ -872,7 +872,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedArray()
 		{
 			var expected = new { x = new[] { new { Foo = "Bar" } } };
@@ -881,7 +881,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var expected = new[] { new { Foo = "Biff" } };
@@ -898,7 +898,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray()
 		{
 			var expected = new { x = new[] { new { Foo = "Biff" } } };
@@ -918,7 +918,7 @@ public class EquivalenceAssertsTests
 
 	public class ArrayOfObjects_Strict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new[] { new { Foo = "Bar" }, new { Foo = "Baz" } };
@@ -927,7 +927,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedArray()
 		{
 			var expected = new { x = new[] { new { Foo = "Bar" }, new { Foo = "Baz" } } };
@@ -936,7 +936,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ValueNotFoundInActual()
 		{
 			var expected = new[] { new { Foo = "Biff" } };
@@ -953,7 +953,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ExtraValueInActual()
 		{
 			var expected = new[] { new { Foo = "Bar" } };
@@ -970,7 +970,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray_ValueNotFoundInActual()
 		{
 			var expected = new { x = new[] { new { Foo = "Biff" } } };
@@ -987,7 +987,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray_ExtraValueInActual()
 		{
 			var expected = new { x = new[] { new { Foo = "Bar" } } };
@@ -1007,7 +1007,7 @@ public class EquivalenceAssertsTests
 
 	public class ListOfObjects_NotStrict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new[] { new { Foo = "Bar" } }.ToList();
@@ -1016,7 +1016,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedArray()
 		{
 			var expected = new { x = new[] { new { Foo = "Bar" } }.ToList() };
@@ -1025,7 +1025,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var expected = new[] { new { Foo = "Biff" } }.ToList();
@@ -1042,7 +1042,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray()
 		{
 			var expected = new { x = new[] { new { Foo = "Biff" } }.ToList() };
@@ -1062,7 +1062,7 @@ public class EquivalenceAssertsTests
 
 	public class ListOfObjects_Strict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new[] { new { Foo = "Bar" }, new { Foo = "Baz" } }.ToList();
@@ -1071,7 +1071,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedList()
 		{
 			var expected = new { x = new[] { new { Foo = "Bar" }, new { Foo = "Baz" } }.ToList() };
@@ -1080,7 +1080,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ValueNotFoundInActual()
 		{
 			var expected = new[] { new { Foo = "Biff" } }.ToList();
@@ -1097,7 +1097,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ExtraValueInActual()
 		{
 			var expected = new[] { new { Foo = "Bar" } }.ToList();
@@ -1114,7 +1114,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray_ValueNotFoundInActual()
 		{
 			var expected = new { x = new[] { new { Foo = "Biff" } }.ToList() };
@@ -1131,7 +1131,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedArray_ExtraValueInActual()
 		{
 			var expected = new { x = new[] { new { Foo = "Bar" } }.ToList() };
@@ -1151,31 +1151,31 @@ public class EquivalenceAssertsTests
 
 	public class EquivalentCollectionsInDifferentTypes
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ArrayIsEquivalentToList()
 		{
 			Assert.Equivalent(new[] { 1, 2, 3 }, new List<int> { 1, 2, 3 });
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ListIsEquivalentToArray()
 		{
 			Assert.Equivalent(new List<int> { 1, 2, 3 }, new[] { 1, 2, 3 });
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ArrayIsEquivalentToImmutableArray()
 		{
 			Assert.Equivalent(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }.ToImmutableArray());
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ImmutableArrayIsEquivalentToArray()
 		{
 			Assert.Equivalent(new[] { 1, 2, 3 }.ToImmutableArray(), new[] { 1, 2, 3 });
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ImmutableListIsEquivalentToImmutableSortedSet()
 		{
 			Assert.Equivalent(new[] { 1, 2, 3 }.ToImmutableList(), new[] { 1, 2, 3 }.ToImmutableSortedSet());
@@ -1184,7 +1184,7 @@ public class EquivalenceAssertsTests
 
 	public class Dictionaries_NotStrict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new Dictionary<string, int> { ["Foo"] = 42 };
@@ -1193,7 +1193,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void SuccessWithArrayValues()
 		{
 			var expected = new Dictionary<string, int[]> { ["Foo"] = [42] };
@@ -1202,7 +1202,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void SuccessWithListValues()
 		{
 			var expected = new Dictionary<string, List<int>> { ["Foo"] = [42] };
@@ -1211,7 +1211,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedDictionary()
 		{
 			var expected = new { x = new Dictionary<string, int> { ["Foo"] = 42 } };
@@ -1220,7 +1220,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure()
 		{
 			var expected = new Dictionary<string, int> { ["Foo"] = 16 };
@@ -1237,7 +1237,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void FailureWithArrayValues()
 		{
 			var expected = new Dictionary<string, int[]> { ["Foo"] = [16] };
@@ -1254,7 +1254,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void FailureWithListValues()
 		{
 			var expected = new Dictionary<string, List<int>> { ["Foo"] = [16] };
@@ -1271,7 +1271,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedDictionary()
 		{
 			var expected = new { x = new Dictionary<string, int> { ["Foo"] = 16 } };
@@ -1291,7 +1291,7 @@ public class EquivalenceAssertsTests
 
 	public class Dictionaries_Strict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new Dictionary<string, int> { ["Bar"] = 2112, ["Foo"] = 42 };
@@ -1300,7 +1300,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success_EmbeddedDictionary()
 		{
 			var expected = new { x = new Dictionary<string, int> { ["Bar"] = 2112, ["Foo"] = 42 } };
@@ -1309,7 +1309,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ValueNotFoundInActual()
 		{
 			var expected = new Dictionary<string, int> { ["Foo"] = 16 };
@@ -1326,7 +1326,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_ExtraValueInActual()
 		{
 			var expected = new Dictionary<string, int> { ["Bar"] = 2112, ["Foo"] = 42 };
@@ -1343,7 +1343,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedDictionary_ValueNotFoundInActual()
 		{
 			var expected = new { x = new Dictionary<string, int> { ["Foo"] = 16 } };
@@ -1360,7 +1360,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_EmbeddedDictionary_ExtraValueInActual()
 		{
 			var expected = new { x = new Dictionary<string, int> { ["Bar"] = 2112, ["Foo"] = 42 } };
@@ -1380,7 +1380,7 @@ public class EquivalenceAssertsTests
 
 	public class KeyValuePairs_NotStrict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new KeyValuePair<int, int[]>(42, [1, 4]);
@@ -1389,7 +1389,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: false);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_Key()
 		{
 			var expected = new KeyValuePair<int, int[]>(42, [1, 4]);
@@ -1406,7 +1406,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_Value()
 		{
 			var expected = new KeyValuePair<int, int[]>(42, [1, 6]);
@@ -1426,7 +1426,7 @@ public class EquivalenceAssertsTests
 
 	public class KeyValuePairs_Strict
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Success()
 		{
 			var expected = new KeyValuePair<int, int[]>(42, [1, 4]);
@@ -1435,7 +1435,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual, strict: true);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_Key()
 		{
 			var expected = new KeyValuePair<int, int[]>(42, [1, 4]);
@@ -1452,7 +1452,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Failure_Value()
 		{
 			var expected = new KeyValuePair<int, int[]>(42, [1, 6]);
@@ -1473,7 +1473,7 @@ public class EquivalenceAssertsTests
 	// https://github.com/xunit/xunit/issues/3028
 	public class Groupings
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public static void Success()
 		{
 			var expected = Enumerable.Range(1, 4).ToLookup(i => (i % 2) == 0);
@@ -1482,7 +1482,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public static void Failure_KeysDontMatch()
 		{
 			var expected = Enumerable.Range(1, 4).ToLookup(i => true);
@@ -1499,7 +1499,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public static void Failure_KeysMatch_ValuesDoNot()
 		{
 			var expected = Enumerable.Range(1, 4).ToLookup(i => (i % 2) == 0);
@@ -1521,7 +1521,7 @@ public class EquivalenceAssertsTests
 	{
 		// DateTime
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void DateTime_Success()
 		{
 			var expected = new DateTime(2022, 12, 1, 1, 3, 1);
@@ -1530,7 +1530,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void DateTime_Failure()
 		{
 			var expected = new DateTime(2022, 12, 1, 1, 3, 1);
@@ -1547,7 +1547,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void DateTimeToString_Failure()
 		{
 			var expected = new DateTime(2022, 12, 1, 1, 3, 1);
@@ -1565,7 +1565,7 @@ public class EquivalenceAssertsTests
 			Assert.IsType<ArgumentException>(ex.InnerException);  // Thrown by DateTime.CompareTo
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void StringToDateTime_Success()
 		{
 			var expected = "2022-12-01T01:03:01.0000000";
@@ -1576,7 +1576,7 @@ public class EquivalenceAssertsTests
 
 		// DateTimeOffset
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void DateTimeOffset_Success()
 		{
 			var expected = new DateTimeOffset(2022, 12, 1, 1, 3, 1, TimeSpan.Zero);
@@ -1585,7 +1585,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void DateTimeOffset_Failure()
 		{
 			var expected = new DateTimeOffset(2022, 12, 1, 1, 3, 1, TimeSpan.Zero);
@@ -1604,7 +1604,7 @@ public class EquivalenceAssertsTests
 
 		// FileSystemInfo-derived types
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void DirectoryInfo_Success()
 		{
 			var assemblyPath = Path.GetDirectoryName(typeof(SpecialCases).Assembly.Location);
@@ -1616,7 +1616,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void DirectoryInfo_Failure()
 		{
 			var assemblyPath = Path.GetDirectoryName(typeof(SpecialCases).Assembly.Location);
@@ -1634,7 +1634,7 @@ public class EquivalenceAssertsTests
 			Assert.StartsWith("Assert.Equivalent() Failure: Mismatched value on member 'FullName'" + Environment.NewLine, ex.Message);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void FileInfo_Success()
 		{
 			var assembly = typeof(SpecialCases).Assembly.Location;
@@ -1644,7 +1644,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void FileInfo_Failure()
 		{
 			var expected = new FileInfo(typeof(SpecialCases).Assembly.Location);
@@ -1656,7 +1656,7 @@ public class EquivalenceAssertsTests
 			Assert.StartsWith("Assert.Equivalent() Failure: Mismatched value on member 'FullName'" + Environment.NewLine, ex.Message);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void FileInfoToDirectoryInfo_Failure_TopLevel()
 		{
 			var location = typeof(SpecialCases).Assembly.Location;
@@ -1674,7 +1674,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void FileInfoToDirectoryInfo_Failure_Embedded()
 		{
 			var location = typeof(SpecialCases).Assembly.Location;
@@ -1700,14 +1700,14 @@ public class EquivalenceAssertsTests
 			new Uri("a/b#c", UriKind.RelativeOrAbsolute),
 		];
 
-		[Theory]
+		[Theory(Skip = "Not AOT compatible")]
 		[MemberData(nameof(UriData))]
 		public void Uri_Success(Uri uri)
 		{
 			Assert.Equivalent(uri, new Uri(uri.OriginalString, UriKind.RelativeOrAbsolute));
 		}
 
-		[Theory]
+		[Theory(Skip = "Not AOT compatible")]
 		[MemberData(nameof(UriData))]
 		public void Uri_Failure(Uri uri)
 		{
@@ -1724,7 +1724,7 @@ public class EquivalenceAssertsTests
 
 		// Ensuring we use reference equality for the circular reference hash sets
 
-		[Theory]
+		[Theory(Skip = "Not AOT compatible")]
 		[InlineData(true)]
 		[InlineData(false)]
 		public void Issue2939(bool strict)
@@ -1737,7 +1737,7 @@ public class EquivalenceAssertsTests
 
 		// Lazy<T>
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void LazyValueEquivalentToValue()
 		{
 			var expected = "Hello";
@@ -1746,7 +1746,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ValueEquivalentToLazyValue()
 		{
 			var expected = new Lazy<string>(() => "Hello");
@@ -1755,7 +1755,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void UnretrievedLazyValueEquivalentToRetrievedLazyValue()
 		{
 			var expected = new Lazy<string>(() => "Hello");
@@ -1768,7 +1768,7 @@ public class EquivalenceAssertsTests
 
 	public class Obsolete
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void SkipsObsoleteProperties()
 		{
 			var value1 = new ClassWithObsoleteProperty { Value = 42 };
@@ -1785,7 +1785,7 @@ public class EquivalenceAssertsTests
 			public int ObsoleteProperty => throw new NotImplementedException();
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void SkipsObsoletePropertyGetters()
 		{
 			var value1 = new ClassWithObsoletePropertyGetter { Value = 42, ObsoleteProperty = 2112 };
@@ -1809,7 +1809,7 @@ public class EquivalenceAssertsTests
 
 	public class CircularReferences
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Expected_Shallow()
 		{
 			var expected = new SelfReferential(circularReference: true);
@@ -1821,7 +1821,7 @@ public class EquivalenceAssertsTests
 			Assert.Equal("Assert.Equivalent() Failure: Circular reference found in 'expected.Other'", ex.Message);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Actual_Shallow()
 		{
 			var expected = new SelfReferential(circularReference: false);
@@ -1836,7 +1836,7 @@ public class EquivalenceAssertsTests
 
 	public class DepthLimit
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void PreventArbitrarilyLargeDepthObjectTree()
 		{
 			var expected = new InfiniteRecursionClass();
@@ -1861,7 +1861,7 @@ public class EquivalenceAssertsTests
 
 	public class Indexers
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Equivalent()
 		{
 			var expected = new ClassWithIndexer { Value = "Hello" };
@@ -1870,7 +1870,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void NotEquivalent()
 		{
 			var expected = new ClassWithIndexer { Value = "Hello" };
@@ -1890,7 +1890,7 @@ public class EquivalenceAssertsTests
 
 	public class Tuples
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Equivalent()
 		{
 			var expected = Tuple.Create(42, "Hello world");
@@ -1899,7 +1899,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void NotEquivalent()
 		{
 			var expected = Tuple.Create(42, "Hello world");
@@ -1919,7 +1919,7 @@ public class EquivalenceAssertsTests
 
 	public class ValueTuples
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Equivalent()
 		{
 			var expected = (answer: 42, greeting: "Hello world");
@@ -1928,7 +1928,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void NotEquivalent()
 		{
 			var expected = (answer: 42, greeting: "Hello world");
@@ -1945,7 +1945,7 @@ public class EquivalenceAssertsTests
 			);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ValueTupleInsideClass_Equivalent()
 		{
 			var expected = new Person { ID = 42, Relationships = (parent: new Person { ID = 2112 }, child: null) };
@@ -1966,7 +1966,7 @@ public class EquivalenceAssertsTests
 	{
 		public class ByExpression
 		{
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void Shallow()
 			{
 				Assert.EquivalentWithExclusions(
@@ -1976,7 +1976,7 @@ public class EquivalenceAssertsTests
 				);
 			}
 
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void MixedShallowAndDeep()
 			{
 				Assert.EquivalentWithExclusions(
@@ -1989,7 +1989,7 @@ public class EquivalenceAssertsTests
 
 			// https://github.com/xunit/xunit/issues/3338
 			// https://github.com/xunit/xunit/issues/3347
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void PartialDeepComparisonBug()
 			{
 				var ex = Record.Exception(() =>
@@ -2014,7 +2014,7 @@ public class EquivalenceAssertsTests
 
 		public class ByString
 		{
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void Shallow()
 			{
 				Assert.EquivalentWithExclusions(
@@ -2024,7 +2024,7 @@ public class EquivalenceAssertsTests
 				);
 			}
 
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void MixedShallowAndDeep()
 			{
 				Assert.EquivalentWithExclusions(
@@ -2037,7 +2037,7 @@ public class EquivalenceAssertsTests
 
 			// https://github.com/xunit/xunit/issues/3338
 			// https://github.com/xunit/xunit/issues/3347
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void PartialDeepComparisonBug()
 			{
 				var ex = Record.Exception(() =>
@@ -2060,7 +2060,7 @@ public class EquivalenceAssertsTests
 			}
 
 			// https://github.com/xunit/xunit/issues/3394
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void Collections()
 			{
 				var expected = new DeepRecord()
@@ -2083,7 +2083,7 @@ public class EquivalenceAssertsTests
 			}
 
 			// https://github.com/xunit/xunit/issues/3394
-			[Fact]
+			[Fact(Skip = "Not AOT compatible")]
 			public void Collections_Strict()
 			{
 				var expected = new DeepRecord()
@@ -2132,7 +2132,7 @@ public class EquivalenceAssertsTests
 	// https://github.com/xunit/xunit/issues/3088
 	public sealed class ByRefLikeParameters
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void Equivalent()
 		{
 			var expected = new RefParameterClass(42.ToString());
@@ -2141,7 +2141,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void NotEquivalent()
 		{
 			var expected = new RefParameterClass2(42.ToString());
@@ -2176,7 +2176,7 @@ public class EquivalenceAssertsTests
 
 	public sealed class ClassWithNewOverrides
 	{
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ExpectedOverridden()
 		{
 			var expected = new DerivedClass { ID = "123" };
@@ -2185,7 +2185,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void ActualOverridden()
 		{
 			var expected = new BaseClass { ID = "123" };
@@ -2194,7 +2194,7 @@ public class EquivalenceAssertsTests
 			Assert.Equivalent(expected, actual);
 		}
 
-		[Fact]
+		[Fact(Skip = "Not AOT compatible")]
 		public void BothPropertiesOverridden()
 		{
 			var expected = new DerivedClass { ID = "123" };

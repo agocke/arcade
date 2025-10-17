@@ -13,7 +13,7 @@ public class ArgumentFormatterTests
 		//[CulturedFactDefault]
 		public static void NullValue()
 		{
-			Assert.Equal("null", ArgumentFormatter.Format(null));
+			Assert.Equal("null", ArgumentFormatter.Format((object?)null));
 		}
 
 		// NOTE: It's important that this stays as MemberData

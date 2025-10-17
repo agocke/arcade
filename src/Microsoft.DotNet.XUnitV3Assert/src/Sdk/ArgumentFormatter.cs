@@ -215,6 +215,7 @@ namespace Xunit.Sdk
 
 			try
 			{
+				var t = value.GetType();
 				if (value.GetType().IsEnum)
 					return FormatEnumValue(value);
 
@@ -256,7 +257,7 @@ namespace Xunit.Sdk
 					return FormatTupleValue(value, depth);
 #endif
 
-				if (type.IsValueType)
+				if (value.GetType().IsValueType)
 					return FormatValueTypeValue(value, type);
 
 				if (value is Task task)
