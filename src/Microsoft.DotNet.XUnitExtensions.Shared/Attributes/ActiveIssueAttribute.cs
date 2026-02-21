@@ -1,8 +1,11 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.DotNet.XUnitExtensions;
 using Xunit.Sdk;
@@ -22,8 +25,9 @@ namespace Xunit
         private readonly IEnumerable<object> _ctorArgs;
 #endif
 
-        public Type CalleeType { get; private set; }
-        public string[] ConditionMemberNames { get; private set; }
+        [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)]
+        public Type? CalleeType { get; private set; }
+        public string[]? ConditionMemberNames { get; private set; }
 
         public ActiveIssueAttribute(string issue, TestPlatforms platforms)
         {
@@ -53,7 +57,9 @@ namespace Xunit
 #endif
         }
 
-        public ActiveIssueAttribute(string issue, Type calleeType, params string[] conditionMemberNames)
+        public ActiveIssueAttribute(string issue,
+            [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)] Type calleeType,
+            params string[] conditionMemberNames)
         {
 #if USES_XUNIT_3
             _ctorArgs = [issue, calleeType, conditionMemberNames];
@@ -65,7 +71,7 @@ namespace Xunit
 #if USES_XUNIT_3
         public IReadOnlyCollection<KeyValuePair<string, string>> GetTraits()
         {
-            return DiscovererHelpers.EvaluateArguments(_ctorArgs, XunitConstants.Failing).ToArray();
+            return DiscovererHelpers.EvaluateArguments(_ctorArgs, XunitConstants.Failing, CalleeType, ConditionMemberNames).ToArray();
         }
 #endif
     }

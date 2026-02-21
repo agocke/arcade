@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -44,15 +46,10 @@ namespace Xunit
 
         internal bool EvaluateParameterHelper()
         {
-            Type calleeType = null;
-            string[] conditionMemberNames = null;
-
-            if (ConditionalTestDiscoverer.CheckInputToSkipExecution([CalleeType, ConditionMemberNames], ref calleeType, ref conditionMemberNames))
-            {
+            if (CalleeType == null || ConditionMemberNames == null || ConditionMemberNames.Length == 0)
                 return true;
-            }
 
-            return DiscovererHelpers.Evaluate(calleeType, conditionMemberNames);
+            return DiscovererHelpers.Evaluate(CalleeType, ConditionMemberNames);
         }
 #endif
     }

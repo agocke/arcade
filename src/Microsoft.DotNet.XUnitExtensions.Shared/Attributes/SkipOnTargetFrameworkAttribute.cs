@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using Microsoft.DotNet.XUnitExtensions;
@@ -21,7 +23,7 @@ namespace Xunit
         private readonly TargetFrameworkMonikers _frameworks;
 #endif
 
-        public SkipOnTargetFrameworkAttribute(TargetFrameworkMonikers platform, string reason = null)
+        public SkipOnTargetFrameworkAttribute(TargetFrameworkMonikers platform, string? reason = null)
         {
 #if USES_XUNIT_3
             _frameworks = platform;

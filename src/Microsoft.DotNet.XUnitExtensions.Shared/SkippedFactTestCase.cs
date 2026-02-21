@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,14 +31,14 @@ namespace Microsoft.DotNet.XUnitExtensions
             string testCaseDisplayName,
             string uniqueID,
             bool @explicit,
-            Type[] skipExceptions = null,
-            string skipReason = null,
-            Type skipType = null,
-            string skipUnless = null,
-            string skipWhen = null,
-            Dictionary<string, HashSet<string>> traits = null,
-            object[] testMethodArguments = null,
-            string sourceFilePath = null,
+            Type[]? skipExceptions = null,
+            string? skipReason = null,
+            Type? skipType = null,
+            string? skipUnless = null,
+            string? skipWhen = null,
+            Dictionary<string, HashSet<string>>? traits = null,
+            object[]? testMethodArguments = null,
+            string? sourceFilePath = null,
             int? sourceLineNumber = null,
             int? timeout = null)
             : base(testMethod, testCaseDisplayName, uniqueID, @explicit, skipExceptions, skipReason, skipType, skipUnless, skipWhen, traits, testMethodArguments, sourceFilePath, sourceLineNumber, timeout)
@@ -49,7 +51,7 @@ namespace Microsoft.DotNet.XUnitExtensions
 #endif
 
 #if USES_XUNIT_3
-        public async ValueTask<RunSummary> Run(ExplicitOption explicitOption, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
+        public async ValueTask<RunSummary> Run(ExplicitOption explicitOption, IMessageBus messageBus, object?[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
 #else
         public override async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink,
                                                         IMessageBus messageBus,

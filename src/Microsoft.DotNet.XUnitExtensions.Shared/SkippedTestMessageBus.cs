@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Linq;
 #if !USES_XUNIT_3
@@ -47,7 +49,7 @@ namespace Microsoft.DotNet.XUnitExtensions
                         ExecutionTime = testFailed.ExecutionTime,
                         FinishTime = testFailed.FinishTime,
                         Output = testFailed.Output,
-                        Reason = testFailed.Messages.FirstOrDefault(),
+                        Reason = testFailed.Messages.FirstOrDefault() ?? string.Empty,
                         TestCaseUniqueID = testFailed.TestCaseUniqueID,
                         TestClassUniqueID = testFailed.TestClassUniqueID,
                         TestCollectionUniqueID = testFailed.TestCollectionUniqueID,

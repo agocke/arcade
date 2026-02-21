@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.DotNet.XUnitExtensions;
@@ -15,7 +17,7 @@ namespace Xunit
     public sealed class ConditionalTheoryAttribute : TheoryAttribute
     {
         [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)]
-        public Type CalleeType { get; private set; }
+        public Type? CalleeType { get; private set; }
         public string[] ConditionMemberNames { get; private set; }
 
         public ConditionalTheoryAttribute(
@@ -26,7 +28,7 @@ namespace Xunit
             CalleeType = calleeType;
             ConditionMemberNames = conditionMemberNames;
 #if USES_XUNIT_3
-            string skipReason = ConditionalTestDiscoverer.EvaluateSkipConditions(calleeType, conditionMemberNames);
+            string? skipReason = ConditionalTestDiscoverer.EvaluateSkipConditions(calleeType, conditionMemberNames);
             if (skipReason != null)
                 Skip = skipReason;
 #endif

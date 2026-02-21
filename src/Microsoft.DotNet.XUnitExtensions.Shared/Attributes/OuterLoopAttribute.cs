@@ -1,8 +1,11 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.DotNet.XUnitExtensions;
 using Xunit.Sdk;
@@ -22,8 +25,9 @@ namespace Xunit
         private readonly object[] _ctorArgs;
 #endif
 
-        public Type CalleeType { get; private set; }
-        public string[] ConditionMemberNames { get; private set; }
+        [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)]
+        public Type? CalleeType { get; private set; }
+        public string[]? ConditionMemberNames { get; private set; }
 
         public OuterLoopAttribute()
         {
@@ -67,7 +71,9 @@ namespace Xunit
 #endif
         }
 
-        public OuterLoopAttribute(string reason, Type calleeType, params string[] conditionMemberNames)
+        public OuterLoopAttribute(string reason,
+            [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)] Type calleeType,
+            params string[] conditionMemberNames)
         {
 #if USES_XUNIT_3
             _ctorArgs = [reason, calleeType, conditionMemberNames];
@@ -84,7 +90,7 @@ namespace Xunit
                 return new[] { new KeyValuePair<string, string>(XunitConstants.Category, XunitConstants.OuterLoop) };
             }
 
-            return DiscovererHelpers.EvaluateArguments(_ctorArgs, XunitConstants.OuterLoop).ToArray();
+            return DiscovererHelpers.EvaluateArguments(_ctorArgs, XunitConstants.OuterLoop, CalleeType, ConditionMemberNames).ToArray();
         }
 #endif
     }

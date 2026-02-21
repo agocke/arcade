@@ -1,9 +1,12 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Xunit;
@@ -43,14 +46,14 @@ namespace Microsoft.DotNet.XUnitExtensions
                 (frameworks.HasFlag(TargetFrameworkMonikers.Netcoreapp) && IsRunningOnNetCoreApp) ||
                 (frameworks.HasFlag(TargetFrameworkMonikers.NetFramework) && IsRunningOnNetFramework);
 
-        internal static bool Evaluate(Type calleeType, string[] conditionMemberNames)
+        internal static bool Evaluate([DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)] Type calleeType, string[] conditionMemberNames)
         {
             foreach (string entry in conditionMemberNames)
             {
                 // Null condition member names are silently tolerated.
                 if (string.IsNullOrWhiteSpace(entry)) continue;
 
-                Func<bool> conditionFunc = ConditionalTestDiscoverer.LookupConditionalMember(calleeType, entry);
+                Func<bool>? conditionFunc = ConditionalTestDiscoverer.LookupConditionalMember(calleeType, entry);
                 if (conditionFunc == null)
                 {
                     throw new InvalidOperationException($"Unable to get member, please check input for {entry}.");
@@ -64,13 +67,21 @@ namespace Microsoft.DotNet.XUnitExtensions
 
         internal static IEnumerable<KeyValuePair<string, string>> EvaluateArguments(IEnumerable<object> ctorArgs,string category, int skipFirst=1)
         {
+            return EvaluateArguments(ctorArgs, category, calleeType: null, conditionMemberNames: null, skipFirst);
+        }
+
+        internal static IEnumerable<KeyValuePair<string, string>> EvaluateArguments(
+            IEnumerable<object> ctorArgs,
+            string category,
+            [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)] Type? calleeType,
+            string[]? conditionMemberNames,
+            int skipFirst=1)
+        {
             Debug.Assert(ctorArgs.Count() >= 2);
 
             TestPlatforms platforms = TestPlatforms.Any;
             TargetFrameworkMonikers frameworks = TargetFrameworkMonikers.Any;
             TestRuntimes runtimes = TestRuntimes.Any;
-            Type calleeType = null;
-            string[] conditionMemberNames = null;
 
             foreach (object arg in ctorArgs.Skip(skipFirst)) // First argument is the issue number or reason.
             {
@@ -85,14 +96,6 @@ namespace Microsoft.DotNet.XUnitExtensions
                 else if (arg is TestRuntimes)
                 {
                     runtimes = (TestRuntimes)arg;
-                }
-                else if (arg is Type)
-                {
-                    calleeType = (Type)arg;
-                }
-                else if (arg is string[])
-                {
-                    conditionMemberNames = (string[])arg;
                 }
             }
 
@@ -111,7 +114,7 @@ namespace Microsoft.DotNet.XUnitExtensions
             }
         }
 
-        internal static string AppendAdditionalMessage(this string message, string additionalMessage)
+        internal static string AppendAdditionalMessage(this string message, string? additionalMessage)
             => !string.IsNullOrWhiteSpace(additionalMessage) ? $"{message} {additionalMessage}" : message;
     }
 }

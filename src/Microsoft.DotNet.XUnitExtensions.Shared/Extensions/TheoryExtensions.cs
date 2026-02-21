@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,7 @@ namespace Microsoft.DotNet.XUnitExtensions
             // Returning TheoryData rather than IEnumerable<object> directly should
             // encourage discover and usage of TheoryData<T1, ..> classes for more
             // complicated theories. Slightly easier to type as well.
-            return new TheoryDataAdapter(data.Select(d => new object[] { d }));
+            return new TheoryDataAdapter(data.Select(d => new object[] { d! }));
         }
 
         private class TheoryDataAdapter : TheoryData, IEnumerable<object[]>

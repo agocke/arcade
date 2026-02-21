@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -9,6 +11,7 @@ using System.Reflection;
 #if !USES_XUNIT_3
 using Xunit.Abstractions;
 #endif
+using Xunit;
 using Xunit.Sdk;
 
 namespace Microsoft.DotNet.XUnitExtensions
@@ -22,7 +25,7 @@ namespace Microsoft.DotNet.XUnitExtensions
         /// Evaluates skip conditions given an explicit callee type and condition member names.
         /// Used by attribute constructors in xunit v3 where discoverers are not needed.
         /// </summary>
-        internal static string EvaluateSkipConditions(
+        internal static string? EvaluateSkipConditions(
             [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
             Type calleeType,
             string[] conditionMemberNames)
@@ -36,7 +39,7 @@ namespace Microsoft.DotNet.XUnitExtensions
                 if (string.IsNullOrWhiteSpace(entry))
                     continue;
 
-                Func<bool> conditionFunc = LookupConditionalMember(calleeType, entry);
+                Func<bool>? conditionFunc = LookupConditionalMember(calleeType, entry);
                 if (conditionFunc == null)
                     throw new ConditionalDiscovererException(GetFailedLookupString(entry, calleeType));
 
@@ -61,17 +64,17 @@ namespace Microsoft.DotNet.XUnitExtensions
         // This helper method evaluates the given condition member names for a given set of test cases.
         // If any condition member evaluates to 'false', the test cases are marked to be skipped.
         // The skip reason is the collection of all the condition members that evaluated to 'false'.
-        internal static string EvaluateSkipConditions(
+        internal static string? EvaluateSkipConditions(
             ITestMethod testMethod,
             object[] conditionArguments)
         {
-            Type calleeType = null;
-            string[] conditionMemberNames = null;
+            Type? calleeType = null;
+            string[]? conditionMemberNames = null;
 
             if (CheckInputToSkipExecution(conditionArguments, ref calleeType, ref conditionMemberNames, testMethod)) return null;
 
             MethodInfo testMethodInfo = testMethod.Method.ToRuntimeMethod();
-            Type testMethodDeclaringType = testMethodInfo.DeclaringType;
+            Type? testMethodDeclaringType = testMethodInfo.DeclaringType;
             List<string> falseConditions = new List<string>(conditionMemberNames.Count());
 
             foreach (string entry in conditionMemberNames)
@@ -84,7 +87,7 @@ namespace Microsoft.DotNet.XUnitExtensions
                     continue;
                 }
 
-                Type declaringType;
+                Type? declaringType;
 
                 if (calleeType != null)
                 {
@@ -98,7 +101,7 @@ namespace Microsoft.DotNet.XUnitExtensions
                     if (symbols.Length == 2)
                     {
                         conditionMemberName = symbols[1];
-                        ITypeInfo type = testMethod.TestClass.Class.Assembly.GetTypes(false).Where(t => t.Name.Contains(symbols[0])).FirstOrDefault();
+                        ITypeInfo? type = testMethod.TestClass.Class.Assembly.GetTypes(false).Where(t => t.Name.Contains(symbols[0])).FirstOrDefault();
                         if (type != null)
                         {
                             declaringType = type.ToRuntimeType();
@@ -106,7 +109,7 @@ namespace Microsoft.DotNet.XUnitExtensions
                     }
                 }
 
-                Func<bool> conditionFunc;
+                Func<bool>? conditionFunc;
                 if ((conditionFunc = LookupConditionalMember(declaringType, conditionMemberName)) == null)
                 {
                     throw new ConditionalDiscovererException(GetFailedLookupString(conditionMemberName, declaringType));
@@ -137,7 +140,7 @@ namespace Microsoft.DotNet.XUnitExtensions
             return null;
         }
 
-        internal static bool TryEvaluateSkipConditions(ITestFrameworkDiscoveryOptions discoveryOptions, IMessageSink diagnosticMessageSink, ITestMethod testMethod, object[] conditionArguments, out string skipReason, out ExecutionErrorTestCase errorTestCase)
+        internal static bool TryEvaluateSkipConditions(ITestFrameworkDiscoveryOptions discoveryOptions, IMessageSink diagnosticMessageSink, ITestMethod testMethod, object[] conditionArguments, out string? skipReason, out ExecutionErrorTestCase? errorTestCase)
         {
             skipReason = null;
             errorTestCase = null;
@@ -167,33 +170,33 @@ namespace Microsoft.DotNet.XUnitExtensions
                 "of any visibility, accepting zero arguments, and having a return type of Boolean.";
         }
         
-        internal static Func<bool> LookupConditionalMember(Type t, string name)
+        internal static Func<bool>? LookupConditionalMember([DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)] Type? t, string name)
         {
             if (t == null || name == null)
                 return null;
 
             TypeInfo ti = t.GetTypeInfo();
 
-            MethodInfo mi = ti.GetDeclaredMethod(name);
+            MethodInfo? mi = ti.GetDeclaredMethod(name);
             if (mi != null && mi.IsStatic && mi.GetParameters().Length == 0 && mi.ReturnType == typeof(bool))
-                return () => (bool)mi.Invoke(null, null);
+                return () => (bool)mi.Invoke(null, null)!;
 
-            PropertyInfo pi = ti.GetDeclaredProperty(name);
+            PropertyInfo? pi = ti.GetDeclaredProperty(name);
             if (pi != null && pi.PropertyType == typeof(bool) && pi.GetMethod != null && pi.GetMethod.IsStatic && pi.GetMethod.GetParameters().Length == 0)
-                return () => (bool)pi.GetValue(null);
+                return () => (bool)pi.GetValue(null)!;
 
-            FieldInfo fi = ti.GetDeclaredField(name);
+            FieldInfo? fi = ti.GetDeclaredField(name);
             if (fi != null && fi.FieldType == typeof(bool) && fi.IsStatic)
-                return () => (bool)fi.GetValue(null);
+                return () => (bool)fi.GetValue(null)!;
 
             return LookupConditionalMember(ti.BaseType, name);
         }
 
-        internal static bool CheckInputToSkipExecution(object[] conditionArguments, ref Type calleeType, ref string[] conditionMemberNames,
+        internal static bool CheckInputToSkipExecution(object[] conditionArguments, ref Type? calleeType, ref string[]? conditionMemberNames,
 #if !USES_XUNIT_3
-            ITestMethod
+            ITestMethod?
 #else
-            object
+            object?
 #endif
             testMethod = null)
         {
@@ -224,7 +227,7 @@ namespace Microsoft.DotNet.XUnitExtensions
             }
 
             // [ConditionalFact((string[]) null)]
-            if (conditionMemberNames == null || conditionMemberNames.Count() == 0) return true;
+            if (conditionMemberNames == null || !conditionMemberNames.Any()) return true;
 
             return false;
         }
