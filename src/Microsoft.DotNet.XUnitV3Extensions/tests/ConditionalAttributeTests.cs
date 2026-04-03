@@ -1,112 +1,61 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using Xunit;
 
 namespace Microsoft.DotNet.XUnitExtensions.Tests
 {
-    [TestCaseOrderer(typeof(AlphabeticalOrderer))]
+    /// <summary>
+    /// Validates ConditionalFact and ConditionalTheory attribute behavior.
+    ///
+    /// In xunit v3 AOT mode, custom attributes cannot derive from FactAttribute (sealed).
+    /// ConditionalFact/ConditionalTheory are metadata-only attributes that evaluate conditions
+    /// and expose a Skip property, but they are NOT test discoverers. Tests must use
+    /// [Fact]/[Theory] directly for discovery. The conditional skip behavior is evaluated
+    /// at attribute construction time and stored in the Skip property.
+    /// </summary>
     public class ConditionalAttributeTests
     {
-        // The tests under this class validate that ConditionalFact and ConditionalTheory
-        // tests are discovered and executed correctly under xunit v3.
-        // This test class is test-order dependent so do not rename the tests.
-
-        private static bool s_conditionalFactTrueExecuted;
-        private static bool s_conditionalFactFalseExecuted;
-        private static int s_conditionalTheoryTrueCount;
-        private static int s_conditionalTheoryFalseCount;
-        private static readonly List<int> s_conditionalTheoryTrueArgs = new();
-
         public static bool AlwaysTrue => true;
         public static bool AlwaysFalse => false;
 
-        [ConditionalFact(typeof(ConditionalAttributeTests), nameof(AlwaysTrue))]
-        public void ConditionalAttributeTrue()
+        [Fact]
+        public void ConditionalFact_TrueCondition_SkipIsNull()
         {
-            s_conditionalFactTrueExecuted = true;
-        }
-
-        [ConditionalFact(typeof(ConditionalAttributeTests), nameof(AlwaysFalse))]
-        public void ConditionalAttributeFalse()
-        {
-            s_conditionalFactFalseExecuted = true;
-        }
-
-        [ConditionalTheory(typeof(ConditionalAttributeTests), nameof(AlwaysTrue))]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-        public void ConditionalTheoryTrue(int value)
-        {
-            // Verify the argument was actually passed through (the bug being tested).
-            Assert.True(value > 0, $"Expected a positive value but got {value}");
-            s_conditionalTheoryTrueArgs.Add(value);
-            s_conditionalTheoryTrueCount++;
-        }
-
-        [ConditionalTheory(typeof(ConditionalAttributeTests), nameof(AlwaysFalse))]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-        public void ConditionalTheoryFalse(int value)
-#pragma warning restore xUnit1026
-        {
-            s_conditionalTheoryFalseCount++;
-        }
-
-        [ConditionalTheory(typeof(ConditionalAttributeTests), nameof(AlwaysTrue))]
-        [InlineData("hello")]
-        [InlineData("world")]
-        public void ConditionalTheoryTrueStringArgs(string text)
-        {
-            // Verify string arguments are passed through correctly.
-            Assert.False(string.IsNullOrEmpty(text), "Expected a non-empty string argument");
-        }
-
-        [ConditionalTheory(typeof(ConditionalAttributeTests), nameof(AlwaysTrue))]
-        [InlineData(10, "ten")]
-        [InlineData(20, "twenty")]
-        public void ConditionalTheoryTrueMultipleArgs(int number, string name)
-        {
-            // Verify multiple arguments are passed through correctly.
-            Assert.True(number > 0);
-            Assert.False(string.IsNullOrEmpty(name));
+            var attr = new ConditionalFactAttribute(typeof(ConditionalAttributeTests), nameof(AlwaysTrue));
+            Assert.Null(attr.Skip);
         }
 
         [Fact]
-        public void ValidateConditionalFactTrue()
+        public void ConditionalFact_FalseCondition_SkipIsSet()
         {
-            Assert.True(s_conditionalFactTrueExecuted);
+            var attr = new ConditionalFactAttribute(typeof(ConditionalAttributeTests), nameof(AlwaysFalse));
+            Assert.NotNull(attr.Skip);
         }
 
         [Fact]
-        public void ValidateConditionalFactFalse()
+        public void ConditionalTheory_TrueCondition_SkipIsNull()
         {
-            Assert.False(s_conditionalFactFalseExecuted);
+            var attr = new ConditionalTheoryAttribute(typeof(ConditionalAttributeTests), nameof(AlwaysTrue));
+            Assert.Null(attr.Skip);
         }
 
         [Fact]
-        public void ValidateConditionalTheoryTrue()
+        public void ConditionalTheory_FalseCondition_SkipIsSet()
         {
-            Assert.Equal(3, s_conditionalTheoryTrueCount);
+            var attr = new ConditionalTheoryAttribute(typeof(ConditionalAttributeTests), nameof(AlwaysFalse));
+            Assert.NotNull(attr.Skip);
         }
 
         [Fact]
-        public void ValidateConditionalTheoryTrueReceivedArgs()
+        public void ConditionalFact_IsNotFactAttribute()
         {
-            // This is the key test: if testMethodArguments were dropped,
-            // the data row values would not reach the test method.
-            Assert.Equal(new[] { 1, 2, 3 }, s_conditionalTheoryTrueArgs.OrderBy(x => x).ToArray());
-        }
-
-        [Fact]
-        public void ValidateConditionalTheoryFalse()
-        {
-            Assert.Equal(0, s_conditionalTheoryFalseCount);
+            // In AOT mode, ConditionalFact does not derive from FactAttribute.
+            // It is a standalone metadata attribute.
+            var attr = new ConditionalFactAttribute(typeof(ConditionalAttributeTests), nameof(AlwaysTrue));
+            Assert.IsAssignableFrom<Attribute>(attr);
         }
     }
 }

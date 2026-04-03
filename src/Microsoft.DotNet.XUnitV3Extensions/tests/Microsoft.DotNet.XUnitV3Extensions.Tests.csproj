@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit.v3.core.aot" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="xunit.v3.core.aot" VersionOverride="$(XUnitV3Version)" PrivateAssets="all" Publish="true" />
     <PackageReference Include="xunit.v3.assert" PrivateAssets="all" Publish="true" />
     <PackageReference Include="xunit.analyzers" VersionOverride="1.27.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" VersionOverride="$(MicrosoftTestingPlatformVersion)" PrivateAssets="all" Publish="true" />
