@@ -2,12 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>$(BundledNETCoreAppTargetFramework)</TargetFramework>
-    <TestRunnerName>XUnitV3</TestRunnerName>
     <OutputType>Exe</OutputType>
+    <!-- Prevent the installed Arcade SDK from adding non-AOT xunit packages -->
+    <DisableArcadeTestFramework>true</DisableArcadeTestFramework>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\src\Microsoft.DotNet.XUnitV3Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3.core.aot" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="xunit.v3.assert" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="xunit.analyzers" VersionOverride="1.27.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" VersionOverride="$(MicrosoftTestingPlatformVersion)" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="Microsoft.Testing.Platform.MSBuild" VersionOverride="$(MicrosoftTestingPlatformVersion)" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="Microsoft.Testing.Platform" VersionOverride="$(MicrosoftTestingPlatformVersion)" PrivateAssets="all" Publish="true" />
   </ItemGroup>
 
 </Project>

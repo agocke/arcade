@@ -2,11 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #nullable enable
+using System;
 
 using Microsoft.DotNet.XUnitExtensions;
-#if USES_XUNIT_3
-using Xunit.Internal;
-#endif
 
 namespace Xunit 
 {
@@ -14,11 +12,16 @@ namespace Xunit
     /// This test should be run only on .NET (.NET Core).
     /// </summary>
 #if USES_XUNIT_3
-    public class DotNetOnlyTheoryAttribute : TheoryAttributeBase
+    public class DotNetOnlyTheoryAttribute : Attribute
 #else
     public class DotNetOnlyTheoryAttribute : TheoryAttribute
 #endif
     {
+#if USES_XUNIT_3
+        // In xunit v3 AOT, TheoryAttribute is sealed so custom attributes derive from Attribute.
+        // Tests using this attribute must also have [Theory] for the AOT source generator.
+        public string? Skip { get; set; }
+#endif
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetOnlyTheoryAttribute"/> class.
         /// </summary>

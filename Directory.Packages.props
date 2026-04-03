@@ -17,7 +17,7 @@
     <XUnitVersion>2.9.3</XUnitVersion>
     <XUnitV3Version>4.0.0-pre.33</XUnitV3Version>
     <XUnitAnalyzersVersion>1.22.0</XUnitAnalyzersVersion>
-    <XUnitV3AnalyzersVersion>2.0.0-pre.9</XUnitV3AnalyzersVersion>
+    <XUnitV3AnalyzersVersion>1.27.0</XUnitV3AnalyzersVersion>
     <XUnitRunnerConsoleVersion>$(XUnitVersion)</XUnitRunnerConsoleVersion>
     <XUnitRunnerVisualStudioVersion>3.1.5</XUnitRunnerVisualStudioVersion>
     <MicrosoftTestingPlatformVersion>2.1.0</MicrosoftTestingPlatformVersion>
@@ -97,6 +97,8 @@
     <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
     <PackageVersion Include="xunit.extensibility.core" Version="$(XUnitVersion)" />
     <PackageVersion Include="xunit.extensibility.execution" Version="$(XUnitVersion)" />
+    <PackageVersion Include="xunit.v3.assert" Version="$(XUnitV3Version)" />
+    <PackageVersion Include="xunit.v3.core.aot" Version="$(XUnitV3Version)" />
     <PackageVersion Include="xunit.v3.extensibility.core.aot" Version="$(XUnitV3Version)" />
     <PackageVersion Include="xunit.runner.reporters" Version="$(XUnitVersion)" />
     <PackageVersion Include="nsubstitute" Version="5.1.0" />

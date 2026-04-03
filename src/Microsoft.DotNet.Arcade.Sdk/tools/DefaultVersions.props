@@ -82,7 +82,7 @@
     <!-- Follow the instructions on how to update any of the below xunit versions: https://github.com/dotnet/arcade/blob/main/Documentation/update-xunit.md. -->
     <XUnitVersion Condition="'$(XUnitVersion)' == ''">2.9.3</XUnitVersion>
     <XUnitAnalyzersVersion Condition="'$(XUnitAnalyzersVersion)' == ''">1.22.0</XUnitAnalyzersVersion>
-    <XUnitV3AnalyzersVersion Condition="'$(XUnitV3AnalyzersVersion)' == ''">2.0.0-pre.9</XUnitV3AnalyzersVersion>
+    <XUnitV3AnalyzersVersion Condition="'$(XUnitV3AnalyzersVersion)' == ''">1.27.0</XUnitV3AnalyzersVersion>
     <XUnitRunnerConsoleVersion Condition="'$(XUnitRunnerConsoleVersion)' == ''">$(XUnitVersion)</XUnitRunnerConsoleVersion>
     <XUnitRunnerVisualStudioVersion Condition="'$(XUnitRunnerVisualStudioVersion)' == ''">3.1.5</XUnitRunnerVisualStudioVersion>
 

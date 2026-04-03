@@ -4,9 +4,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.DotNet.XUnitExtensions;
-#if USES_XUNIT_3
-using Xunit.Internal;
-#endif
 using Xunit.Sdk;
 
 namespace Xunit
@@ -16,11 +13,16 @@ namespace Xunit
 #endif
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 #if USES_XUNIT_3
-    public sealed class ConditionalFactAttribute : FactAttributeBase
+    public sealed class ConditionalFactAttribute : Attribute
 #else
     public sealed class ConditionalFactAttribute : FactAttribute
 #endif
     {
+#if USES_XUNIT_3
+        // In xunit v3 AOT, FactAttribute is sealed so custom attributes derive from Attribute.
+        // Tests using this attribute must also have [Fact] for the AOT source generator.
+        public string Skip { get; set; }
+#endif
         [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)]
         public Type CalleeType { get; private set; }
         public string[] ConditionMemberNames { get; private set; }
