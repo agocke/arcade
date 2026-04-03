@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit.v3.extensibility.core" />
+    <PackageReference Include="xunit.v3.extensibility.core.aot" />
 
     <Using Include="Xunit.v3" />
   </ItemGroup>

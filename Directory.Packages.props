@@ -15,11 +15,12 @@
     <!-- Overwrite XUnitVersion/XUnitAnalyzersVersion/XUnitRunnerConsoleVersion/XUnitRunnerVisualStudioVersion/MicrosoftTestingPlatformVersion that comes from the Arcade SDK to be in sync as Arcade doesn't use a live Arcade SDK.
          Keep in sync with DefaultVersions.props. -->
     <XUnitVersion>2.9.3</XUnitVersion>
-    <XUnitV3Version>3.2.2</XUnitV3Version>
+    <XUnitV3Version>4.0.0-pre.33</XUnitV3Version>
     <XUnitAnalyzersVersion>1.22.0</XUnitAnalyzersVersion>
+    <XUnitV3AnalyzersVersion>2.0.0-pre.9</XUnitV3AnalyzersVersion>
     <XUnitRunnerConsoleVersion>$(XUnitVersion)</XUnitRunnerConsoleVersion>
     <XUnitRunnerVisualStudioVersion>3.1.5</XUnitRunnerVisualStudioVersion>
-    <MicrosoftTestingPlatformVersion>1.9.1</MicrosoftTestingPlatformVersion>
+    <MicrosoftTestingPlatformVersion>2.1.0</MicrosoftTestingPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -96,7 +97,7 @@
     <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
     <PackageVersion Include="xunit.extensibility.core" Version="$(XUnitVersion)" />
     <PackageVersion Include="xunit.extensibility.execution" Version="$(XUnitVersion)" />
-    <PackageVersion Include="xunit.v3.extensibility.core" Version="$(XUnitV3Version)" />
+    <PackageVersion Include="xunit.v3.extensibility.core.aot" Version="$(XUnitV3Version)" />
     <PackageVersion Include="xunit.runner.reporters" Version="$(XUnitVersion)" />
     <PackageVersion Include="nsubstitute" Version="5.1.0" />
   </ItemGroup>
