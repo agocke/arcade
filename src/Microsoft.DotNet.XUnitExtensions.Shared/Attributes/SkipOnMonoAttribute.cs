@@ -12,7 +12,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.SkipOnMonoDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+#if USES_XUNIT_3
+    public class SkipOnMonoAttribute : Attribute
+#else
     public class SkipOnMonoAttribute : Attribute, ITraitAttribute
+#endif
     {
 #if USES_XUNIT_3
         private readonly TestPlatforms _testPlatforms = TestPlatforms.Any;

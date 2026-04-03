@@ -5,13 +5,20 @@
 
 using System.Runtime.InteropServices;
 using Microsoft.DotNet.XUnitExtensions;
+#if USES_XUNIT_3
+using Xunit.Internal;
+#endif
 
 namespace Xunit
 {
     /// <summary>
     /// This test should be run only on Unix (Linux, OSX platforms).
     /// </summary>
+#if USES_XUNIT_3
+    public class UnixOnlyTheoryAttribute : TheoryAttributeBase
+#else
     public class UnixOnlyTheoryAttribute : TheoryAttribute
+#endif
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UnixOnlyTheoryAttribute"/> class.

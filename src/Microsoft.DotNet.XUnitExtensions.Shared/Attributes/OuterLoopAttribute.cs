@@ -16,7 +16,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.OuterLoopTestsDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
+#if USES_XUNIT_3
+    public class OuterLoopAttribute : Attribute
+#else
     public class OuterLoopAttribute : Attribute, ITraitAttribute
+#endif
     {
 #if USES_XUNIT_3
         private readonly object[] _ctorArgs;

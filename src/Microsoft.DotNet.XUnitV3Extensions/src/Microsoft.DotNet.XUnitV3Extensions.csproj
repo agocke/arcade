@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$(NetMinimum);netstandard2.0;net472</TargetFrameworks>
+    <TargetFramework>$(NetMinimum)</TargetFramework>
     <IsPackable>true</IsPackable>
     <Description>This package provides things like various traits and discovers like OuterLoop/ActiveIssue that are used by .NET test projects.</Description>
     <IsTestUtilityProject>true</IsTestUtilityProject>

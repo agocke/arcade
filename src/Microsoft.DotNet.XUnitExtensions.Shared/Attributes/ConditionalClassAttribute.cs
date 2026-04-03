@@ -15,7 +15,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.ConditionalClassDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+#if USES_XUNIT_3
+    public sealed class ConditionalClassAttribute : Attribute
+#else
     public sealed class ConditionalClassAttribute : Attribute, ITraitAttribute
+#endif
     {
         [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)]
         public Type CalleeType { get; private set; }

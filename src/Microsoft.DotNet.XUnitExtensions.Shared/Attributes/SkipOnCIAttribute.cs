@@ -12,7 +12,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.SkipOnCIDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
+#if USES_XUNIT_3
+    public sealed class SkipOnCIAttribute : Attribute
+#else
     public sealed class SkipOnCIAttribute : Attribute, ITraitAttribute
+#endif
     {
         public string Reason { get; private set; }
 

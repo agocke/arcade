@@ -4,13 +4,20 @@
 #nullable enable
 
 using Microsoft.DotNet.XUnitExtensions;
+#if USES_XUNIT_3
+using Xunit.Internal;
+#endif
 
 namespace Xunit 
 {
     /// <summary>
     /// This test should be run only on .NET (.NET Core).
     /// </summary>
+#if USES_XUNIT_3
+    public class DotNetOnlyTheoryAttribute : TheoryAttributeBase
+#else
     public class DotNetOnlyTheoryAttribute : TheoryAttribute
+#endif
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetOnlyTheoryAttribute"/> class.

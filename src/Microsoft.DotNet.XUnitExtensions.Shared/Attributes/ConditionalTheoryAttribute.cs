@@ -4,6 +4,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.DotNet.XUnitExtensions;
+#if USES_XUNIT_3
+using Xunit.Internal;
+#endif
 using Xunit.Sdk;
 
 namespace Xunit
@@ -12,7 +15,11 @@ namespace Xunit
     [XunitTestCaseDiscoverer("Microsoft.DotNet.XUnitExtensions.ConditionalTheoryDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+#if USES_XUNIT_3
+    public sealed class ConditionalTheoryAttribute : TheoryAttributeBase
+#else
     public sealed class ConditionalTheoryAttribute : TheoryAttribute
+#endif
     {
         [DynamicallyAccessedMembers(StaticReflectionConstants.ConditionalMemberKinds)]
         public Type CalleeType { get; private set; }

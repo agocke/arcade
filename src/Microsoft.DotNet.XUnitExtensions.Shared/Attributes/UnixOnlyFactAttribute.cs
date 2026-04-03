@@ -5,13 +5,20 @@
 
 using System.Runtime.InteropServices;
 using Microsoft.DotNet.XUnitExtensions;
+#if USES_XUNIT_3
+using Xunit.Internal;
+#endif
 
 namespace Xunit
 {
     /// <summary>
     /// This test should be run only on Unix (Linux, OSX platforms).
     /// </summary>
+#if USES_XUNIT_3
+    public class UnixOnlyFactAttribute : FactAttributeBase
+#else
     public class UnixOnlyFactAttribute : FactAttribute
+#endif
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UnixOnlyFactAttribute"/> class.

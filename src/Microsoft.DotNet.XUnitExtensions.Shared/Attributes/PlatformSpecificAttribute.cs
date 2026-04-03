@@ -16,7 +16,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.PlatformSpecificDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
+#if USES_XUNIT_3
+    public class PlatformSpecificAttribute : Attribute
+#else
     public class PlatformSpecificAttribute : Attribute, ITraitAttribute
+#endif
     {
 #if USES_XUNIT_3
         private readonly TestPlatforms _platforms;

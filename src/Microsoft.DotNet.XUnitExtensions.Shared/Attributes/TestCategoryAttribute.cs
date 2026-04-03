@@ -14,7 +14,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.TestCategoryDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
+#if USES_XUNIT_3
+    public class TestCategoryAttribute : Attribute
+#else
     public class TestCategoryAttribute : Attribute, ITraitAttribute
+#endif
     {
 #if USES_XUNIT_3
         private readonly string _category;

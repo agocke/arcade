@@ -12,7 +12,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.SkipOnPlatformDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+#if USES_XUNIT_3
+    public class SkipOnPlatformAttribute : Attribute
+#else
     public class SkipOnPlatformAttribute : Attribute, ITraitAttribute
+#endif
     {
 #if USES_XUNIT_3
         private readonly TestPlatforms _testPlatforms = (TestPlatforms)0;

@@ -15,7 +15,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.SkipOnTargetFrameworkDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
+#if USES_XUNIT_3
+    public class SkipOnTargetFrameworkAttribute : Attribute
+#else
     public class SkipOnTargetFrameworkAttribute : Attribute, ITraitAttribute
+#endif
     {
 #if USES_XUNIT_3
         private readonly TargetFrameworkMonikers _frameworks;

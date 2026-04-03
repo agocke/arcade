@@ -12,7 +12,11 @@ namespace Xunit
     [TraitDiscoverer("Microsoft.DotNet.XUnitExtensions.SkipOnCoreClrDiscoverer", "Microsoft.DotNet.XUnitExtensions")]
 #endif
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+#if USES_XUNIT_3
+    public class SkipOnCoreClrAttribute : Attribute
+#else
     public class SkipOnCoreClrAttribute : Attribute, ITraitAttribute
+#endif
     {
 #if USES_XUNIT_3
         private static readonly Lazy<bool> s_isJitStress = new Lazy<bool>(() => CoreClrConfigurationDetection.IsJitStress);

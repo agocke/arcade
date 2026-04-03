@@ -5,13 +5,20 @@
 
 using System.Runtime.InteropServices;
 using Microsoft.DotNet.XUnitExtensions;
+#if USES_XUNIT_3
+using Xunit.Internal;
+#endif
 
 namespace Xunit
 {
     /// <summary>
     ///  This test should be run only on Windows on .NET Framework.
     /// </summary>
+#if USES_XUNIT_3
+    public class WindowsFullFrameworkOnlyFactAttribute : FactAttributeBase
+#else
     public class WindowsFullFrameworkOnlyFactAttribute : FactAttribute
+#endif
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsFullFrameworkOnlyFactAttribute"/> class.
