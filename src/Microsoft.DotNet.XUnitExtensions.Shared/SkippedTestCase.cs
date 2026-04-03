@@ -1,14 +1,13 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+#if !USES_XUNIT_3
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-#if !USES_XUNIT_3
 using Xunit.Abstractions;
-#endif
 using Xunit.Sdk;
 
 namespace Microsoft.DotNet.XUnitExtensions
@@ -16,37 +15,13 @@ namespace Microsoft.DotNet.XUnitExtensions
     /// <summary>Wraps another test case that should be skipped.</summary>
     internal sealed class SkippedTestCase : XunitTestCase
     {
-#if !USES_XUNIT_3
         private string _skipReason;
-#endif
+
         [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
         public SkippedTestCase() : base()
         {
         }
 
-#if USES_XUNIT_3
-        public SkippedTestCase(
-            IXunitTestMethod testMethod,
-            string testCaseDisplayName,
-            string uniqueID,
-            bool @explicit,
-            Type[] skipExceptions = null,
-            string skipReason = null,
-            Type skipType = null,
-            string skipUnless = null,
-            string skipWhen = null,
-            Dictionary<string, HashSet<string>> traits = null,
-            object[] testMethodArguments = null,
-            string sourceFilePath = null,
-            int? sourceLineNumber = null,
-            int? timeout = null)
-            : base(testMethod, testCaseDisplayName, uniqueID, @explicit, skipExceptions, skipReason, skipType, skipUnless, skipWhen, traits, testMethodArguments, sourceFilePath, sourceLineNumber, timeout)
-        {
-#if !USES_XUNIT_3
-            _skipReason = skipReason;
-#endif
-        }
-#else
         public SkippedTestCase(
             string skipReason,
             IMessageSink diagnosticMessageSink,
@@ -58,9 +33,7 @@ namespace Microsoft.DotNet.XUnitExtensions
         {
             _skipReason = skipReason;
         }
-#endif
 
-#if !USES_XUNIT_3
         protected override string GetSkipReason(IAttributeInfo factAttribute)
             => _skipReason ?? base.GetSkipReason(factAttribute);
 
@@ -78,6 +51,6 @@ namespace Microsoft.DotNet.XUnitExtensions
             base.Serialize(data);
             data.AddValue(nameof(_skipReason), _skipReason);
         }
-#endif
     }
 }
+#endif
